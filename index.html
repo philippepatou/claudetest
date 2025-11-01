@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptron - An Idle Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Perceptron - Neural Network Trainer</h1>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Data:</span>
+                    <span id="data-display">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Data/sec:</span>
+                    <span id="data-rate">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Left Panel: Network Stats -->
+            <section class="panel network-panel">
+                <h2>Neural Network</h2>
+                <div class="network-visual" id="network-visual">
+                    <div class="network-layer">
+                        <div class="node active"></div>
+                    </div>
+                </div>
+                <div class="network-stats">
+                    <div class="stat-row">
+                        <span>Nodes:</span>
+                        <span id="nodes-count">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Layers:</span>
+                        <span id="layers-count">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Computing Power:</span>
+                        <span id="computing-power">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Training Speed:</span>
+                        <span id="training-speed">1.00x</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Middle Panel: Actions -->
+            <section class="panel actions-panel">
+                <h2>Actions</h2>
+
+                <div class="action-section">
+                    <h3>Training</h3>
+                    <button id="train-btn" class="action-btn">
+                        <span class="btn-name">Train Network</span>
+                        <span class="btn-effect">+1 Data</span>
+                    </button>
+                </div>
+
+                <div class="action-section">
+                    <h3>Purchase Nodes</h3>
+                    <button id="buy-node-btn" class="action-btn">
+                        <span class="btn-name">Buy Node</span>
+                        <span class="btn-cost">Cost: <span id="node-cost">10</span> Data</span>
+                        <span class="btn-effect">+<span id="node-effect">0.1</span> Data/sec</span>
+                    </button>
+                </div>
+
+                <div class="action-section">
+                    <h3>Purchase Layers</h3>
+                    <button id="buy-layer-btn" class="action-btn" disabled>
+                        <span class="btn-name">Buy Layer</span>
+                        <span class="btn-cost">Cost: <span id="layer-cost">100</span> Data</span>
+                        <span class="btn-effect">Unlock new possibilities</span>
+                    </button>
+                </div>
+
+                <div class="action-section">
+                    <h3>Computing Power</h3>
+                    <button id="buy-computer-btn" class="action-btn" disabled>
+                        <span class="btn-name">Buy Computer</span>
+                        <span class="btn-cost">Cost: <span id="computer-cost">1000</span> Data</span>
+                        <span class="btn-effect">+10% Training Speed</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Upgrades & Prestige -->
+            <section class="panel upgrades-panel">
+                <h2>Shop</h2>
+                <div id="upgrades-container">
+                    <p class="unlock-message">Unlock more layers to access the shop!</p>
+                </div>
+
+                <div class="prestige-section" id="prestige-section" style="display: none;">
+                    <h2>Prestige</h2>
+                    <div class="prestige-info">
+                        <p>Create an <strong>Ensemble</strong> to restart with permanent bonuses!</p>
+                        <div class="prestige-stats">
+                            <div class="stat-row">
+                                <span>Ensembles:</span>
+                                <span id="ensemble-count">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Bonus Multiplier:</span>
+                                <span id="ensemble-bonus">1.00x</span>
+                            </div>
+                        </div>
+                        <button id="prestige-btn" class="prestige-btn" disabled>
+                            <span class="btn-name">Create Ensemble</span>
+                            <span class="btn-cost">Requires 10,000 Data</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-buttons">
+                <button id="save-btn" class="footer-btn">Save Game</button>
+                <button id="reset-btn" class="footer-btn danger">Hard Reset</button>
+            </div>
+            <p class="game-info">Game saves automatically every 30 seconds</p>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
