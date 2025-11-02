@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporting - Social Media Content Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">SM Content Manager</h1>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="projects.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Projects</a>
+                        <a href="calendar.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Calendar</a>
+                        <a href="library.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Global Library</a>
+                        <a href="newsroom.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Newsroom</a>
+                        <a href="reporting.html" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reporting</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">France Team</span>
+                        <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">JD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Reporting & Analytics</h2>
+                <p class="text-gray-600 mt-1">Track adoption rates and content production</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    <option>November 2025</option>
+                    <option>October 2025</option>
+                    <option>September 2025</option>
+                    <option>Q4 2025</option>
+                    <option>All Time</option>
+                </select>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium text-sm flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Export Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Global Adoption Rate</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-3xl font-semibold text-gray-900">68%</div>
+                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                                        <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>12%</span>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Total Assets Created</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-3xl font-semibold text-gray-900">124</div>
+                                    <div class="ml-2 text-sm text-gray-500">this month</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Global Assets Adopted</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-3xl font-semibold text-gray-900">32/48</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="h-12 w-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Hot Content Ratio</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-3xl font-semibold text-gray-900">28%</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Global Adoption Rate by Market -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Global Content Adoption by Market</h3>
+                <div class="space-y-4">
+                    <!-- France -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold mr-3">FR</div>
+                                <span class="text-sm font-medium text-gray-700">France</span>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">75% (36/48)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-blue-600 h-3 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+
+                    <!-- South Europe -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-semibold mr-3">SE</div>
+                                <span class="text-sm font-medium text-gray-700">South Europe</span>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">82% (39/48)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-600 h-3 rounded-full" style="width: 82%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Middle East -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-semibold mr-3">ME</div>
+                                <span class="text-sm font-medium text-gray-700">Middle East</span>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">54% (26/48)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-purple-600 h-3 rounded-full" style="width: 54%"></div>
+                        </div>
+                    </div>
+
+                    <!-- North America -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-semibold mr-3">NA</div>
+                                <span class="text-sm font-medium text-gray-700">North America</span>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">63% (30/48)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-orange-600 h-3 rounded-full" style="width: 63%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-800"><strong>Insight:</strong> South Europe shows the highest adoption rate. Consider analyzing their selection criteria to improve overall adoption.</p>
+                </div>
+            </div>
+
+            <!-- Adoption by Brand -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Global Content Adoption by Brand</h3>
+                <div class="space-y-4">
+                    <!-- Babybel -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Babybel</span>
+                            <span class="text-sm font-semibold text-gray-900">85% (17/20)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-yellow-500 h-3 rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+
+                    <!-- La Vache Qui Rit -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">La Vache Qui Rit</span>
+                            <span class="text-sm font-semibold text-gray-900">72% (13/18)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-purple-500 h-3 rounded-full" style="width: 72%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Kiri -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Kiri</span>
+                            <span class="text-sm font-semibold text-gray-900">68% (11/16)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full" style="width: 68%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Boursin -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Boursin</span>
+                            <span class="text-sm font-semibold text-gray-900">50% (5/10)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-pink-500 h-3 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </div>
+
+                    <!-- GoGo SqueeZ -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">GoGo SqueeZ</span>
+                            <span class="text-sm font-semibold text-gray-900">60% (6/10)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-teal-500 h-3 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-yellow-50 rounded-lg">
+                    <p class="text-sm text-yellow-800"><strong>Insight:</strong> Babybel content has the highest adoption rate. Boursin needs more market-relevant content.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Production Stats -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Monthly Production by Market</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Market</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Total Assets</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Cold Content</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Hot Content</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Organic</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold mr-3">FR</div>
+                                    <span class="text-sm font-medium text-gray-900">France</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">28</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">22</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">6</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">24</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">4</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-semibold mr-3">SE</div>
+                                    <span class="text-sm font-medium text-gray-900">South Europe</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">32</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">25</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">7</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">28</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">4</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-semibold mr-3">ME</div>
+                                    <span class="text-sm font-medium text-gray-900">Middle East</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">14</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">4</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">15</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">3</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-semibold mr-3">NA</div>
+                                    <span class="text-sm font-medium text-gray-900">North America</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">24</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">6</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">20</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">4</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 bg-purple-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-purple-700 flex items-center justify-center text-white text-xs font-semibold mr-3">GL</div>
+                                    <span class="text-sm font-medium text-gray-900">Global</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-900">22</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">4</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">16</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">6</td>
+                        </tr>
+                        <tr class="bg-gray-100 font-semibold">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">TOTAL</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">124</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">97</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">27</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">103</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">21</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Consolidated Calendar Overview -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Consolidated Calendar Overview - November 2025</h3>
+                <a href="calendar.html" class="text-sm font-medium text-blue-600 hover:text-blue-700">View detailed calendar →</a>
+            </div>
+
+            <div class="mb-4 flex items-center space-x-2">
+                <span class="text-sm text-gray-600">Markets:</span>
+                <button class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">France</button>
+                <button class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">South Europe</button>
+                <button class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">Middle East</button>
+                <button class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">North America</button>
+                <button class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-medium">Global</button>
+            </div>
+
+            <!-- Mini Calendar -->
+            <div class="grid grid-cols-7 gap-1">
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Mon</div>
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Tue</div>
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Wed</div>
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Thu</div>
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Fri</div>
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Sat</div>
+                <div class="text-center text-xs font-semibold text-gray-600 py-2">Sun</div>
+
+                <!-- Days with content indicators -->
+                <div class="bg-gray-50 p-2 min-h-16"></div>
+                <div class="bg-gray-50 p-2 min-h-16"></div>
+                <div class="bg-gray-50 p-2 min-h-16"></div>
+                <div class="bg-gray-50 p-2 min-h-16"></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">1</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">2</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-red-500 rounded-full"></div><div class="w-2 h-2 bg-purple-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">3</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">4</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-green-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">5</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-orange-500 rounded-full"></div><div class="w-2 h-2 bg-red-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">6</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-green-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">7</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-purple-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">8</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">9</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-orange-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">10</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-green-500 rounded-full"></div><div class="w-2 h-2 bg-purple-500 rounded-full"></div></div></div>
+                <!-- Continue for remaining days... abbreviated for brevity -->
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">11</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">12</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-red-500 rounded-full"></div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">13</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">14</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">15</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-purple-500 rounded-full"></div><div class="w-2 h-2 bg-orange-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">16</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">17</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">18</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-green-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">19</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">20</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-red-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">21</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">22</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-blue-500 rounded-full"></div><div class="w-2 h-2 bg-purple-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">23</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">24</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">25</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-green-500 rounded-full"></div><div class="w-2 h-2 bg-orange-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">26</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">27</div><div class="flex flex-wrap gap-0.5"><div class="w-2 h-2 bg-red-500 rounded-full"></div><div class="w-2 h-2 bg-blue-500 rounded-full"></div></div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">28</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">29</div></div>
+                <div class="bg-white border p-2 min-h-16"><div class="text-xs mb-1">30</div></div>
+                <div class="bg-gray-50 p-2 min-h-16"></div>
+            </div>
+
+            <div class="mt-4 flex items-center space-x-4 text-xs text-gray-600">
+                <div class="flex items-center"><div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>France</div>
+                <div class="flex items-center"><div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>South Europe</div>
+                <div class="flex items-center"><div class="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>Middle East</div>
+                <div class="flex items-center"><div class="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>North America</div>
+                <div class="flex items-center"><div class="w-3 h-3 bg-red-500 rounded-full mr-1"></div>Hot Content</div>
+            </div>
+
+            <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                <p class="text-sm text-green-800"><strong>Good Distribution:</strong> Content is well distributed across the month with minimal overlap between markets on the same days.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Index -->
+    <div class="fixed bottom-4 right-4">
+        <a href="index.html" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Mockups
+        </a>
+    </div>
+</body>
+</html>

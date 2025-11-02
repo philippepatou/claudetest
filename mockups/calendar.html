@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editorial Calendar - Social Media Content Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">SM Content Manager</h1>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="projects.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Projects</a>
+                        <a href="calendar.html" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Calendar</a>
+                        <a href="library.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Global Library</a>
+                        <a href="newsroom.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Newsroom</a>
+                        <a href="reporting.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reporting</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">France Team</span>
+                        <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">JD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Editorial Calendar</h2>
+                <p class="text-gray-600 mt-1">Plan and manage your content schedule</p>
+            </div>
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium text-sm flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Schedule Content
+            </button>
+        </div>
+
+        <!-- Filters & Controls -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Market</label>
+                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>France</option>
+                        <option>South Europe</option>
+                        <option>Middle East</option>
+                        <option>North America</option>
+                        <option>Global</option>
+                        <option>All Markets (Consolidated)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>All Brands</option>
+                        <option>Babybel</option>
+                        <option>La Vache Qui Rit</option>
+                        <option>Kiri</option>
+                        <option>Boursin</option>
+                        <option>GoGo SqueeZ</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>All Types</option>
+                        <option>Cold Content</option>
+                        <option>Hot Content</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Platform</label>
+                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>All Platforms</option>
+                        <option>Meta</option>
+                        <option>TikTok</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Format</label>
+                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>All Formats</option>
+                        <option>Organic</option>
+                        <option>Paid</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">View</label>
+                    <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>Monthly</option>
+                        <option>Weekly</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hot Content Quota -->
+        <div class="bg-white shadow rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-700">Hot Content Quota for November 2025</p>
+                    <p class="text-xs text-gray-500 mt-1">France Market</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-red-600">6/10</p>
+                        <p class="text-xs text-gray-500">posts scheduled</p>
+                    </div>
+                    <div class="w-32">
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-red-600 h-3 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Header -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex items-center justify-between">
+                <button class="text-white hover:bg-blue-600 rounded-full p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <h3 class="text-xl font-semibold text-white">November 2025</h3>
+                <button class="text-white hover:bg-blue-600 rounded-full p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="p-6">
+                <!-- Day Headers -->
+                <div class="grid grid-cols-7 gap-2 mb-2">
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Monday</div>
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Tuesday</div>
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Wednesday</div>
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Thursday</div>
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Friday</div>
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Saturday</div>
+                    <div class="text-center text-xs font-semibold text-gray-600 py-2">Sunday</div>
+                </div>
+
+                <!-- Calendar Days -->
+                <div class="grid grid-cols-7 gap-2">
+                    <!-- Week 1 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-gray-50"></div>
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-gray-50"></div>
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-gray-50"></div>
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-gray-50"></div>
+
+                    <!-- Nov 1 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">1</div>
+                    </div>
+
+                    <!-- Nov 2 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">2</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Fall Campaign</p>
+                            <p class="text-xs text-blue-700">Kiri • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 3 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">3</div>
+                    </div>
+
+                    <!-- Week 2 -->
+                    <!-- Nov 4 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">4</div>
+                    </div>
+
+                    <!-- Nov 5 - Hot Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">5</div>
+                        <div class="bg-red-100 border-l-2 border-red-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-red-900 truncate">Halloween Trend</p>
+                            <p class="text-xs text-red-700">Babybel • TikTok</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 6 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">6</div>
+                    </div>
+
+                    <!-- Nov 7 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">7</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Recipe Series</p>
+                            <p class="text-xs text-blue-700">Boursin • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 8 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">8</div>
+                    </div>
+
+                    <!-- Nov 9 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">9</div>
+                    </div>
+
+                    <!-- Nov 10 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">10</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Healthy Snacks</p>
+                            <p class="text-xs text-blue-700">GoGo SqueeZ • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Week 3 -->
+                    <!-- Nov 11 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">11</div>
+                    </div>
+
+                    <!-- Nov 12 - Hot Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">12</div>
+                        <div class="bg-red-100 border-l-2 border-red-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-red-900 truncate">Sustainability</p>
+                            <p class="text-xs text-red-700">Kiri • Meta+TikTok</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 13 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">13</div>
+                    </div>
+
+                    <!-- Nov 14 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">14</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Fun Facts</p>
+                            <p class="text-xs text-blue-700">La Vache Qui Rit • TikTok</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 15 - Multiple Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">15</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Family Moments</p>
+                            <p class="text-xs text-blue-700">Kiri • Meta</p>
+                        </div>
+                        <div class="bg-purple-100 border-l-2 border-purple-600 rounded px-2 py-1">
+                            <p class="text-xs font-medium text-purple-900 truncate">PAID Ad</p>
+                            <p class="text-xs text-purple-700">Babybel • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 16 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">16</div>
+                    </div>
+
+                    <!-- Nov 17 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">17</div>
+                    </div>
+
+                    <!-- Week 4 -->
+                    <!-- Nov 18 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">18</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Winter Recipe</p>
+                            <p class="text-xs text-blue-700">Boursin • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 19 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">19</div>
+                    </div>
+
+                    <!-- Nov 20 - Hot Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">20</div>
+                        <div class="bg-red-100 border-l-2 border-red-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-red-900 truncate">Viral Challenge</p>
+                            <p class="text-xs text-red-700">La Vache Qui Rit • TikTok</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 21 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">21</div>
+                    </div>
+
+                    <!-- Nov 22 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">22</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Product Benefits</p>
+                            <p class="text-xs text-blue-700">Babybel • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 23 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">23</div>
+                    </div>
+
+                    <!-- Nov 24 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">24</div>
+                    </div>
+
+                    <!-- Week 5 -->
+                    <!-- Nov 25 - Cold Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">25</div>
+                        <div class="bg-blue-100 border-l-2 border-blue-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-blue-900 truncate">Christmas Prep</p>
+                            <p class="text-xs text-blue-700">La Vache Qui Rit • Meta</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 26 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">26</div>
+                    </div>
+
+                    <!-- Nov 27 - Hot Content -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">27</div>
+                        <div class="bg-red-100 border-l-2 border-red-600 rounded px-2 py-1 mb-1">
+                            <p class="text-xs font-medium text-red-900 truncate">Black Friday</p>
+                            <p class="text-xs text-red-700">GoGo SqueeZ • Meta+TikTok</p>
+                        </div>
+                    </div>
+
+                    <!-- Nov 28 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">28</div>
+                    </div>
+
+                    <!-- Nov 29 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">29</div>
+                    </div>
+
+                    <!-- Nov 30 -->
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-white hover:border-blue-300 cursor-pointer">
+                        <div class="text-sm font-semibold text-gray-700 mb-2">30</div>
+                    </div>
+
+                    <div class="min-h-32 border border-gray-200 rounded-lg p-2 bg-gray-50"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="mt-6 bg-white shadow rounded-lg p-6">
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">Legend</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-blue-600 rounded mr-2"></div>
+                    <span class="text-sm text-gray-700">Cold Content (Organic)</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-red-600 rounded mr-2"></div>
+                    <span class="text-sm text-gray-700">Hot Content (Reactive)</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-purple-600 rounded mr-2"></div>
+                    <span class="text-sm text-gray-700">Paid Content/Ads</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-green-600 rounded mr-2"></div>
+                    <span class="text-sm text-gray-700">Global Content</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Index -->
+    <div class="fixed bottom-4 right-4">
+        <a href="index.html" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Mockups
+        </a>
+    </div>
+</body>
+</html>

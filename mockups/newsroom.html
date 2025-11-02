@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsroom - Social Media Content Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">SM Content Manager</h1>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="projects.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Projects</a>
+                        <a href="calendar.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Calendar</a>
+                        <a href="library.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Global Library</a>
+                        <a href="newsroom.html" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Newsroom</a>
+                        <a href="reporting.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reporting</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">France Team</span>
+                        <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">JD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Newsroom</h2>
+                <p class="text-gray-600 mt-1">Weekly hot trends discussion and decisions</p>
+            </div>
+            <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium text-sm flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Spot a Trend
+            </button>
+        </div>
+
+        <!-- Meeting Info Banner -->
+        <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-lg shadow-lg p-6 mb-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Next Newsroom Meeting</h3>
+                    <div class="flex items-center space-x-4 text-red-100">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>Monday, Nov 4, 2025</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>10:00 AM CET</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span>All teams</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-3xl font-bold">8</p>
+                    <p class="text-red-100 text-sm">trends to discuss</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white shadow rounded-lg mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button class="px-6 py-4 text-sm font-medium border-b-2 border-red-500 text-red-600">
+                        Pending Discussion (8)
+                    </button>
+                    <button class="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Approved (12)
+                    </button>
+                    <button class="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Rejected (5)
+                    </button>
+                    <button class="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Archive
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Trends List -->
+        <div class="space-y-6">
+            <!-- Trend 1 - High Priority -->
+            <div class="bg-white shadow rounded-lg overflow-hidden border-l-4 border-red-500">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800">HIGH PRIORITY</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">Babybel</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-purple-100 text-purple-800">La Vache Qui Rit</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">#CheeseChallenge - Viral TikTok Trend</h3>
+                            <p class="text-gray-600 mb-3">A new TikTok challenge where users create fun cheese-themed content with creative packaging reveals. Trending in France and spreading to other European markets.</p>
+                            <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <div class="h-6 w-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold mr-2">FR</div>
+                                    <span>Spotted by France</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Spotted 2 hours ago</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                    </svg>
+                                    <span>TikTok, Meta</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trend Details -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-2">Why this trend?</h4>
+                        <ul class="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                            <li>Currently trending with 2.3M views on TikTok</li>
+                            <li>Perfect fit for Babybel's fun, playful brand image</li>
+                            <li>High engagement potential (avg. 15% engagement rate)</li>
+                            <li>Can adapt for La Vache Qui Rit with different creative angle</li>
+                        </ul>
+                    </div>
+
+                    <!-- Reference Links -->
+                    <div class="mb-4">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-2">References</h4>
+                        <div class="flex items-center space-x-2">
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 underline">TikTok Example 1</a>
+                            <span class="text-gray-400">•</span>
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 underline">TikTok Example 2</a>
+                            <span class="text-gray-400">•</span>
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 underline">Trend Report PDF</a>
+                        </div>
+                    </div>
+
+                    <!-- Votes & Comments -->
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-700">Team Votes:</span>
+                                    <div class="flex -space-x-2">
+                                        <div class="h-8 w-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold" title="France - Yes">FR ✓</div>
+                                        <div class="h-8 w-8 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold" title="South Europe - Yes">SE ✓</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold" title="Middle East - Pending">ME ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold" title="North America - Pending">NA ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-purple-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold" title="Global - Yes">GL ✓</div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">(3/5 voted)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-500">6 comments</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium text-sm">✓ Approve</button>
+                                <button class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium text-sm">Discuss</button>
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium text-sm">✕ Reject</button>
+                            </div>
+                        </div>
+
+                        <!-- Comments Preview -->
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="flex items-start space-x-3 mb-2">
+                                <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-semibold">SE</div>
+                                <div class="flex-1">
+                                    <p class="text-sm"><span class="font-medium text-gray-900">Maria (South Europe):</span> <span class="text-gray-600">Love this! We could adapt it with local influencers in Spain and Italy.</span></p>
+                                    <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+                                </div>
+                            </div>
+                            <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all comments →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trend 2 - Medium Priority -->
+            <div class="bg-white shadow rounded-lg overflow-hidden border-l-4 border-yellow-500">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-800">MEDIUM PRIORITY</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Kiri</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Sustainable Packaging Awareness Week</h3>
+                            <p class="text-gray-600 mb-3">Growing conversation around eco-friendly packaging in food industry. Opportunity to highlight Kiri's sustainability efforts.</p>
+                            <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <div class="h-6 w-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-semibold mr-2">GL</div>
+                                    <span>Spotted by Global</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Spotted 1 day ago</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                    </svg>
+                                    <span>Meta, TikTok</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-700">Team Votes:</span>
+                                    <div class="flex -space-x-2">
+                                        <div class="h-8 w-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">FR ✓</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">SE ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">ME ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">NA ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-purple-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">GL ✓</div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">(2/5 voted)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-500">3 comments</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium text-sm">✓ Approve</button>
+                                <button class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium text-sm">Discuss</button>
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium text-sm">✕ Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trend 3 - Low Priority -->
+            <div class="bg-white shadow rounded-lg overflow-hidden border-l-4 border-blue-500">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800">LOW PRIORITY</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-teal-100 text-teal-800">GoGo SqueeZ</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Back to School Shopping Hashtag</h3>
+                            <p class="text-gray-600 mb-3">Parents sharing their back-to-school lunch prep routines and healthy snack ideas.</p>
+                            <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <div class="h-6 w-6 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-semibold mr-2">NA</div>
+                                    <span>Spotted by North America</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Spotted 3 days ago</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                    </svg>
+                                    <span>Meta</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-700">Team Votes:</span>
+                                    <div class="flex -space-x-2">
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">FR ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">SE ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">ME ?</div>
+                                        <div class="h-8 w-8 rounded-full bg-orange-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">NA ✓</div>
+                                        <div class="h-8 w-8 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-gray-600 text-xs font-semibold">GL ?</div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">(1/5 voted)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span class="text-sm text-gray-500">1 comment</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium text-sm">✓ Approve</button>
+                                <button class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 font-medium text-sm">Discuss</button>
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium text-sm">✕ Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-6">
+                <div class="grid grid-cols-4 gap-6 text-center">
+                    <div>
+                        <p class="text-3xl font-bold text-gray-900">8</p>
+                        <p class="text-sm text-gray-600 mt-1">Trends to Discuss</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-green-600">12</p>
+                        <p class="text-sm text-gray-600 mt-1">Approved This Month</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-red-600">5</p>
+                        <p class="text-sm text-gray-600 mt-1">Rejected This Month</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-blue-600">85%</p>
+                        <p class="text-sm text-gray-600 mt-1">Approval Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Index -->
+    <div class="fixed bottom-4 right-4">
+        <a href="index.html" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Mockups
+        </a>
+    </div>
+</body>
+</html>

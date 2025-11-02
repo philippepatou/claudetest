@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Social Media Content Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">SM Content Manager</h1>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="projects.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Projects</a>
+                        <a href="calendar.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Calendar</a>
+                        <a href="library.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Global Library</a>
+                        <a href="newsroom.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Newsroom</a>
+                        <a href="reporting.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reporting</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">France Team</span>
+                        <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">JD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Welcome back, Jean</h2>
+            <p class="text-gray-600 mt-1">Here's what's happening with your content today</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            <!-- Active Projects -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Active Projects</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">12</div>
+                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                                        <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>2</span>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assets Created This Month -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Assets Created (Nov)</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">28</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hot Content Quota -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Hot Quota (Nov)</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">6/10</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-600 h-2 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Validations -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Pending Validations</dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">4</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Recent Projects & Calendar -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Recent Projects -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Recent Projects</h3>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <!-- Project 1 -->
+                        <div class="p-6 hover:bg-gray-50 cursor-pointer">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">HOT</span>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">Babybel</span>
+                                        <h4 class="text-sm font-medium text-gray-900">Halloween Trend - Spooky Cheese</h4>
+                                    </div>
+                                    <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Created 2 days ago
+                                        </span>
+                                        <span>Meta + TikTok</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">In Creation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2 -->
+                        <div class="p-6 hover:bg-gray-50 cursor-pointer">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">COLD</span>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Kiri</span>
+                                        <h4 class="text-sm font-medium text-gray-900">Q4 Campaign - Family Moments</h4>
+                                    </div>
+                                    <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Created 1 week ago
+                                        </span>
+                                        <span>Meta</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">Client Correction</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 3 -->
+                        <div class="p-6 hover:bg-gray-50 cursor-pointer">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">COLD</span>
+                                        <span class="px-2 py-1 text-xs font-semibold rounded bg-purple-100 text-purple-800">La Vache Qui Rit</span>
+                                        <h4 class="text-sm font-medium text-gray-900">Christmas Campaign - Joy & Sharing</h4>
+                                    </div>
+                                    <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Created 3 days ago
+                                        </span>
+                                        <span>Meta + TikTok</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Ideation</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200">
+                        <a href="projects.html" class="text-sm font-medium text-blue-600 hover:text-blue-500">View all projects →</a>
+                    </div>
+                </div>
+
+                <!-- Mini Calendar Preview -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">November 2025 - France</h3>
+                        <a href="calendar.html" class="text-sm font-medium text-blue-600 hover:text-blue-500">View full calendar →</a>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 text-center">
+                        <div class="text-xs font-semibold text-gray-600 py-2">Mon</div>
+                        <div class="text-xs font-semibold text-gray-600 py-2">Tue</div>
+                        <div class="text-xs font-semibold text-gray-600 py-2">Wed</div>
+                        <div class="text-xs font-semibold text-gray-600 py-2">Thu</div>
+                        <div class="text-xs font-semibold text-gray-600 py-2">Fri</div>
+                        <div class="text-xs font-semibold text-gray-600 py-2">Sat</div>
+                        <div class="text-xs font-semibold text-gray-600 py-2">Sun</div>
+
+                        <!-- Week 1 -->
+                        <div class="py-2 text-sm text-gray-400"></div>
+                        <div class="py-2 text-sm text-gray-400"></div>
+                        <div class="py-2 text-sm text-gray-400"></div>
+                        <div class="py-2 text-sm text-gray-400"></div>
+                        <div class="py-2 text-sm text-gray-700">1</div>
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">2<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">3</div>
+
+                        <!-- Week 2 -->
+                        <div class="py-2 text-sm text-gray-700">4</div>
+                        <div class="py-2 text-sm text-gray-700 bg-red-50 rounded">5<div class="w-1 h-1 bg-red-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">6</div>
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">7<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">8</div>
+                        <div class="py-2 text-sm text-gray-700">9</div>
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">10<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+
+                        <!-- Week 3 -->
+                        <div class="py-2 text-sm text-gray-700">11</div>
+                        <div class="py-2 text-sm text-gray-700 bg-red-50 rounded">12<div class="w-1 h-1 bg-red-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">13</div>
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">14<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">15</div>
+                        <div class="py-2 text-sm text-gray-700">16</div>
+                        <div class="py-2 text-sm text-gray-700">17</div>
+
+                        <!-- Remaining days -->
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">18<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">19</div>
+                        <div class="py-2 text-sm text-gray-700 bg-red-50 rounded">20<div class="w-1 h-1 bg-red-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">21</div>
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">22<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">23</div>
+                        <div class="py-2 text-sm text-gray-700">24</div>
+
+                        <div class="py-2 text-sm text-gray-700 bg-blue-50 rounded">25<div class="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">26</div>
+                        <div class="py-2 text-sm text-gray-700 bg-red-50 rounded">27<div class="w-1 h-1 bg-red-500 rounded-full mx-auto mt-1"></div></div>
+                        <div class="py-2 text-sm text-gray-700">28</div>
+                        <div class="py-2 text-sm text-gray-700">29</div>
+                        <div class="py-2 text-sm text-gray-700">30</div>
+                        <div class="py-2 text-sm text-gray-400"></div>
+                    </div>
+                    <div class="mt-4 flex items-center space-x-4 text-sm">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                            <span class="text-gray-600">Cold Content</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                            <span class="text-gray-600">Hot Content</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Notifications & Quick Actions -->
+            <div class="space-y-8">
+                <!-- Quick Actions -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium text-sm">+ New Cold Project</button>
+                        <button class="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium text-sm">+ New Hot Content</button>
+                        <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium text-sm">Browse Global Library</button>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <div class="p-4 hover:bg-gray-50">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <div class="h-2 w-2 bg-blue-600 rounded-full mt-2"></div>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="text-sm text-gray-900">New Global asset available</p>
+                                    <p class="text-xs text-gray-500 mt-1">Babybel - Christmas Campaign</p>
+                                    <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 hover:bg-gray-50">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <div class="h-2 w-2 bg-orange-600 rounded-full mt-2"></div>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="text-sm text-gray-900">Validation requested</p>
+                                    <p class="text-xs text-gray-500 mt-1">Kiri Q4 Campaign needs review</p>
+                                    <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 hover:bg-gray-50">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <div class="h-2 w-2 bg-green-600 rounded-full mt-2"></div>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="text-sm text-gray-900">Client approved</p>
+                                    <p class="text-xs text-gray-500 mt-1">La Vache Qui Rit - Fall Campaign</p>
+                                    <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 hover:bg-gray-50">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <div class="h-2 w-2 bg-red-600 rounded-full mt-2"></div>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="text-sm text-gray-900">Newsroom meeting tomorrow</p>
+                                    <p class="text-xs text-gray-500 mt-1">Weekly hot trends discussion</p>
+                                    <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200">
+                        <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">View all notifications →</a>
+                    </div>
+                </div>
+
+                <!-- Upcoming Meetings -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Upcoming Meetings</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="h-10 w-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">Newsroom Meeting</p>
+                                <p class="text-xs text-gray-500">Tomorrow at 10:00 AM</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">Monthly Editorial Sync</p>
+                                <p class="text-xs text-gray-500">Nov 15 at 2:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Index -->
+    <div class="fixed bottom-4 right-4">
+        <a href="index.html" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Mockups
+        </a>
+    </div>
+</body>
+</html>

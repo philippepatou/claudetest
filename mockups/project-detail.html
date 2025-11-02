@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail - Social Media Content Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">SM Content Manager</h1>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                        <a href="projects.html" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">My Projects</a>
+                        <a href="calendar.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Calendar</a>
+                        <a href="library.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Global Library</a>
+                        <a href="newsroom.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Newsroom</a>
+                        <a href="reporting.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Reporting</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-4">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">France Team</span>
+                        <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">JD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <div class="mb-6">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2">
+                    <li><a href="projects.html" class="text-gray-500 hover:text-gray-700 text-sm">Projects</a></li>
+                    <li><svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+                    <li class="text-gray-900 text-sm font-medium">Q4 Campaign - Family Moments</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Header -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">COLD</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Kiri</span>
+                        <span class="px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">Client Correction</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Q4 Campaign - Family Moments</h2>
+                    <p class="text-gray-600">Celebrating family togetherness during the holiday season</p>
+                </div>
+                <div class="ml-4">
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium text-sm">Update Status</button>
+                </div>
+            </div>
+
+            <!-- Project Info Grid -->
+            <div class="grid grid-cols-4 gap-6 mt-6 pt-6 border-t border-gray-200">
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Asset Type</p>
+                    <p class="text-sm font-medium text-gray-900">Simple Post + Carousel</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Platform</p>
+                    <p class="text-sm font-medium text-gray-900">Meta</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Format</p>
+                    <p class="text-sm font-medium text-gray-900">Organic</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Created</p>
+                    <p class="text-sm font-medium text-gray-900">Oct 25, 2025</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Timeline -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Workflow Progress</h3>
+            <div class="relative">
+                <!-- Progress Line -->
+                <div class="absolute left-0 top-5 h-0.5 bg-gray-200 w-full"></div>
+                <div class="absolute left-0 top-5 h-0.5 bg-blue-600" style="width: 50%"></div>
+
+                <!-- Steps -->
+                <div class="relative grid grid-cols-9 gap-2">
+                    <!-- Brief Received -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <p class="text-xs font-medium text-gray-900">Brief</p>
+                        <p class="text-xs text-gray-500">Oct 25</p>
+                    </div>
+
+                    <!-- Ideation -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <p class="text-xs font-medium text-gray-900">Ideation</p>
+                        <p class="text-xs text-gray-500">Oct 26</p>
+                    </div>
+
+                    <!-- Client Presentation -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-2">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <p class="text-xs font-medium text-gray-900">Client Pres.</p>
+                        <p class="text-xs text-gray-500">Oct 28</p>
+                    </div>
+
+                    <!-- Correction (Current) -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-yellow-500 rounded-full flex items-center justify-center mb-2">
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-medium text-yellow-700">Correction</p>
+                        <p class="text-xs text-gray-500">Current</p>
+                    </div>
+
+                    <!-- Market Presentation -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-medium text-gray-400">Market Pres.</p>
+                        <p class="text-xs text-gray-400">Pending</p>
+                    </div>
+
+                    <!-- Creation -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-medium text-gray-400">Creation</p>
+                        <p class="text-xs text-gray-400">Pending</p>
+                    </div>
+
+                    <!-- Revision -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-medium text-gray-400">Revision</p>
+                        <p class="text-xs text-gray-400">Pending</p>
+                    </div>
+
+                    <!-- Validation -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-medium text-gray-400">Validation</p>
+                        <p class="text-xs text-gray-400">Pending</p>
+                    </div>
+
+                    <!-- Distributed -->
+                    <div class="text-center">
+                        <div class="w-10 h-10 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-medium text-gray-400">Distributed</p>
+                        <p class="text-xs text-gray-400">Pending</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Brief & Description -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Brief & Description</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Objective</h4>
+                            <p class="text-sm text-gray-600">Create engaging content highlighting Kiri as the perfect cheese for family moments during the holiday season. Focus on warmth, togetherness, and delicious family recipes.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Target Audience</h4>
+                            <p class="text-sm text-gray-600">Parents aged 25-45 with children, interested in family activities and cooking</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Key Messages</h4>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>Kiri brings families together</li>
+                                <li>Perfect for holiday recipes</li>
+                                <li>Creamy, delicious taste loved by all ages</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assets & Files -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Assets & Files</h3>
+                    <div class="space-y-3">
+                        <!-- Asset 1 -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-12 w-12 bg-blue-100 rounded flex items-center justify-center">
+                                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Kiri_FamilyMoments_SimplePost.jpg</p>
+                                        <p class="text-xs text-gray-500">1080x1080 • 2.4 MB • Updated 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
+                                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Download</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Asset 2 -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-12 w-12 bg-purple-100 rounded flex items-center justify-center">
+                                        <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Kiri_FamilyMoments_Carousel_Slide1-4.zip</p>
+                                        <p class="text-xs text-gray-500">4 images • 8.1 MB • Updated 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View</a>
+                                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Download</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Link to Box -->
+                        <div class="border border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-10 w-10 bg-blue-600 rounded flex items-center justify-center">
+                                        <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">View all files on Box</p>
+                                        <p class="text-xs text-gray-500">Agency folder: /Kiri/Q4_2025/Family_Moments</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Open →</a>
+                            </div>
+                        </div>
+
+                        <!-- Link to Sharepoint -->
+                        <div class="border border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-10 w-10 bg-green-600 rounded flex items-center justify-center">
+                                        <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">View client files on SharePoint</p>
+                                        <p class="text-xs text-gray-500">Client folder: /Campaigns/Kiri/2025_Q4</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Open →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Copy Guidelines -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Copy Guidelines</h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-blue-900 mb-2">Simple Post Copy Template</h4>
+                            <p class="text-sm text-blue-800 mb-3">"Nothing brings the family together like [local holiday tradition] with creamy Kiri! 🧀✨"</p>
+                            <div class="text-xs text-blue-700 space-y-1">
+                                <p><strong>Tone:</strong> Warm, friendly, family-oriented</p>
+                                <p><strong>Hashtags:</strong> #KiriMoments #FamilyTime #HolidayRecipes [+local hashtags]</p>
+                                <p><strong>CTA:</strong> "Tag your family moments!"</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-purple-900 mb-2">Carousel Copy Template</h4>
+                            <p class="text-sm text-purple-800 mb-2"><strong>Slide 1:</strong> "4 ways to make family time more delicious with Kiri"</p>
+                            <p class="text-sm text-purple-800 mb-2"><strong>Slides 2-4:</strong> [Adapt with local recipes]</p>
+                            <div class="text-xs text-purple-700 mt-3">
+                                <p><strong>Note:</strong> Each market should adapt recipes to local tastes and traditions</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-yellow-700"><strong>Important:</strong> Markets must adapt copy to local language and cultural context while maintaining brand voice</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Adoptions -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Market Adoptions</h3>
+                    <p class="text-sm text-gray-600 mb-4">Markets that have expressed interest in this content</p>
+
+                    <div class="space-y-3">
+                        <!-- France -->
+                        <div class="border border-green-200 bg-green-50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-8 w-8 bg-green-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">FR</div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">France</p>
+                                        <p class="text-xs text-gray-500">Adopted - In Adaptation</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Interested</span>
+                            </div>
+                            <p class="text-xs text-gray-600 ml-11">Scheduled for Dec 15, 2025 • Meta</p>
+                        </div>
+
+                        <!-- South Europe -->
+                        <div class="border border-green-200 bg-green-50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-8 w-8 bg-green-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">SE</div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">South Europe</p>
+                                        <p class="text-xs text-gray-500">Adopted - Planning</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Interested</span>
+                            </div>
+                            <p class="text-xs text-gray-600 ml-11">Tentative: Dec 18, 2025 • Meta</p>
+                        </div>
+
+                        <!-- Middle East -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-8 w-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-semibold">ME</div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Middle East</p>
+                                        <p class="text-xs text-gray-500">Under Review</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Reviewing</span>
+                            </div>
+                        </div>
+
+                        <!-- North America -->
+                        <div class="border border-red-200 bg-red-50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-8 w-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">NA</div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">North America</p>
+                                        <p class="text-xs text-gray-500">Not Interested</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Declined</span>
+                            </div>
+                            <p class="text-xs text-gray-600 ml-11">Reason: Different campaign focus for Q4</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Activity Timeline -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Activity</h3>
+                    <div class="space-y-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                    <svg class="h-4 w-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-900"><strong>Status updated</strong></p>
+                                <p class="text-xs text-gray-500 mt-1">Changed to "Client Correction"</p>
+                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <svg class="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-900"><strong>Files updated</strong></p>
+                                <p class="text-xs text-gray-500 mt-1">2 new assets uploaded</p>
+                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-900"><strong>France adopted</strong></p>
+                                <p class="text-xs text-gray-500 mt-1">France marked as interested</p>
+                                <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <svg class="h-4 w-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-900"><strong>Client feedback received</strong></p>
+                                <p class="text-xs text-gray-500 mt-1">Minor copy adjustments requested</p>
+                                <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-semibold">JD</div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-900"><strong>Project created</strong></p>
+                                <p class="text-xs text-gray-500 mt-1">by Jean Dupont</p>
+                                <p class="text-xs text-gray-400 mt-1">Oct 25, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Members -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Team</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-sm">JD</div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">Jean Dupont</p>
+                                <p class="text-xs text-gray-500">Project Lead • France</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-semibold text-sm">ML</div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">Marie Laurent</p>
+                                <p class="text-xs text-gray-500">Creative Director • France</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center text-white font-semibold text-sm">AP</div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">Antoine Petit</p>
+                                <p class="text-xs text-gray-500">Designer • France</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <button class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium text-sm">Move to Next Stage</button>
+                        <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium text-sm">Upload Files</button>
+                        <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium text-sm">Add Comment</button>
+                        <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium text-sm">Share with Markets</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Index -->
+    <div class="fixed bottom-4 right-4">
+        <a href="index.html" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg shadow-lg hover:bg-gray-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Mockups
+        </a>
+    </div>
+</body>
+</html>
