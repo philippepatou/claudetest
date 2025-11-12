@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Paperclips - Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Universal Paperclips</h1>
+            <div class="subtitle">Un jeu incr&eacute;mental sur la fabrication de trombones</div>
+        </header>
+
+        <main>
+            <!-- Section principale de production -->
+            <section class="production-section">
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Trombones:</span>
+                        <span id="paperclips" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Fonds:</span>
+                        <span id="funds" class="stat-value">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Prix par trombone:</span>
+                        <span id="price" class="stat-value">$0.25</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Demande publique:</span>
+                        <span id="demand" class="stat-value">50</span>
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="main-action">
+                    <button id="make-paperclip" class="btn btn-primary">Fabriquer Trombone</button>
+                    <div class="production-rate">
+                        <span>Trombones/sec: </span>
+                        <span id="clips-per-sec">0</span>
+                    </div>
+                </div>
+
+                <div class="pricing-controls">
+                    <button id="lower-price" class="btn btn-small">Prix -</button>
+                    <button id="raise-price" class="btn btn-small">Prix +</button>
+                </div>
+            </section>
+
+            <!-- Section des ressources -->
+            <section class="resources-section">
+                <h2>Ressources</h2>
+                <div class="stat-item">
+                    <span class="stat-label">Fil m&eacute;tallique:</span>
+                    <span id="wire" class="stat-value">0</span>
+                    <span>pouces</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Co&ucirc;t du fil:</span>
+                    <span id="wire-cost" class="stat-value">$20</span>
+                </div>
+                <button id="buy-wire" class="btn btn-secondary">Acheter Fil (1000 pouces)</button>
+            </section>
+
+            <!-- Section des upgrades -->
+            <section class="upgrades-section">
+                <h2>Am&eacute;liorations</h2>
+                <div id="upgrades-container">
+                    <!-- Les upgrades seront ajoutées dynamiquement -->
+                </div>
+            </section>
+
+            <!-- Section Manufacturing -->
+            <section class="manufacturing-section">
+                <h2>Fabrication</h2>
+                <div class="stat-item">
+                    <span class="stat-label">AutoClippers:</span>
+                    <span id="autoclipper-count" class="stat-value">0</span>
+                </div>
+                <button id="buy-autoclipper" class="btn btn-secondary">
+                    Acheter AutoClipper (<span id="autoclipper-cost">5</span>$)
+                </button>
+            </section>
+
+            <!-- Section Marketing -->
+            <section class="marketing-section">
+                <h2>Marketing</h2>
+                <div class="stat-item">
+                    <span class="stat-label">Niveau Marketing:</span>
+                    <span id="marketing-level" class="stat-value">1</span>
+                </div>
+                <button id="buy-marketing" class="btn btn-secondary">
+                    Augmenter Marketing (<span id="marketing-cost">100</span>$)
+                </button>
+            </section>
+
+            <!-- Section des projets -->
+            <section class="projects-section">
+                <h2>Projets</h2>
+                <div class="stat-item">
+                    <span class="stat-label">Ops:</span>
+                    <span id="operations" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Cr&eacute;ativit&eacute;:</span>
+                    <span id="creativity" class="stat-value">0</span>
+                </div>
+                <div id="projects-container">
+                    <!-- Les projets seront ajoutés dynamiquement -->
+                </div>
+            </section>
+
+            <!-- Section de sauvegarde -->
+            <section class="save-section">
+                <button id="save-game" class="btn btn-secondary">Sauvegarder</button>
+                <button id="reset-game" class="btn btn-danger">R&eacute;initialiser</button>
+                <div class="save-info">Sauvegarde automatique toutes les 10 secondes</div>
+            </section>
+        </main>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
