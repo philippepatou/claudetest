@@ -182,6 +182,30 @@ ul, ol {
   margin-top: 0.25rem;
 }
 
+.header-address {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+}
+
+.header-address .address-icon {
+  font-size: var(--text-base);
+}
+
+.header-address .address-text {
+  font-weight: 500;
+}
+
+/* Masquer l'adresse sur mobile pour gagner de l'espace */
+@media (max-width: 767px) {
+  .header-address {
+    display: none;
+  }
+}
+
 .main-nav {
   display: none;
 }
