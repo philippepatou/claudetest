@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page non trouvée - Sophie Martin Infirmière</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    .error-container {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .error-code {
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .error-message {
+      font-size: 1.5rem;
+      color: var(--gray-700);
+      margin-bottom: 1rem;
+    }
+    .error-description {
+      color: var(--gray-600);
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <a href="/">
+            <h1 class="logo-text">
+              Sophie Martin
+              <span class="logo-subtitle">Infirmière Libérale - Dunkerque</span>
+            </h1>
+          </a>
+        </div>
+        <nav class="main-nav" id="mainNav">
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="qui-suis-je.html">Qui suis-je</a></li>
+            <li><a href="soins-proposes.html">Soins proposés</a></li>
+            <li><a href="infos-pratiques.html">Infos pratiques</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <a href="tel:+33328591234" class="btn-header-call">☎ 03 28 59 12 34</a>
+          <button class="menu-toggle" id="menuToggle" aria-label="Menu de navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="error-container">
+      <div class="error-code">404</div>
+      <h2 class="error-message">Page non trouvée</h2>
+      <p class="error-description">
+        Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
+      </p>
+      <div class="cta-buttons">
+        <a href="/" class="btn-primary">Retour à l'accueil</a>
+        <a href="infos-pratiques.html" class="btn-secondary" style="background-color: white; color: var(--primary); border-color: var(--primary);">Me contacter</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <p>
+            Sophie Martin<br>
+            Infirmière Libérale<br>
+            15 Rue Jean Jaurès<br>
+            59140 Dunkerque
+          </p>
+          <p>
+            <a href="tel:+33328591234">03 28 59 12 34</a><br>
+            <a href="mailto:contact@infirmiere-dunkerque.fr">contact@infirmiere-dunkerque.fr</a>
+          </p>
+        </div>
+        <div class="footer-col">
+          <h3>Navigation</h3>
+          <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="qui-suis-je.html">Qui suis-je</a></li>
+            <li><a href="soins-proposes.html">Soins proposés</a></li>
+            <li><a href="infos-pratiques.html">Infos pratiques</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Informations</h3>
+          <ul>
+            <li><a href="mentions-legales.html">Mentions légales</a></li>
+            <li><a href="confidentialite.html">Confidentialité</a></li>
+            <li><a href="liens-utiles.html">Liens utiles</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Horaires</h3>
+          <p>
+            <strong>Permanence téléphonique :</strong><br>
+            Lun - Ven : 9h00 - 18h00<br>
+            Samedi : 9h00 - 12h00<br>
+            Dimanche : Fermé
+          </p>
+          <p class="footer-urgence">
+            <strong>Urgences :</strong> 15 (SAMU)
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Sophie Martin - Infirmière Libérale. Tous droits réservés.</p>
+        <p class="footer-credits">Site conforme à la charte de l'Ordre National des Infirmiers | N° RPPS : 10003123456</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
