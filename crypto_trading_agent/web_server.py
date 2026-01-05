@@ -282,9 +282,25 @@ def run_simulation(config):
             simulation_state['logs'].append(f"  • Twitter Weight: {params.get('twitter_weight', 'N/A'):.2%}")
             simulation_state['logs'].append("=" * 60)
 
-            # Ajouter le résumé aux résultats
-            simulation_state['results']['best_iteration'] = best_iteration
-            simulation_state['results']['all_iterations'] = all_iterations
+            # Ajouter le résumé aux résultats (sans référence circulaire)
+            simulation_state['best_iteration'] = {
+                'iteration': best_iteration['iteration'],
+                'roi': best_iteration['roi'],
+                'score': best_iteration['score'],
+                'win_rate': best_iteration['win_rate'],
+                'num_trades': best_iteration['num_trades'],
+                'final_value': best_iteration['final_value'],
+                'profit_loss': best_iteration['profit_loss'],
+                'parameters': best_iteration['parameters'].copy()
+            }
+            simulation_state['all_iterations_summary'] = [
+                {
+                    'iteration': it['iteration'],
+                    'roi': it['roi'],
+                    'score': it['score']
+                }
+                for it in all_iterations
+            ]
 
     except Exception as e:
         simulation_state['running'] = False

@@ -150,6 +150,11 @@ async function updateStatus() {
                 displayResults(status.results);
             }
 
+            // Afficher les meilleurs paramètres si disponibles
+            if (status.best_iteration) {
+                displayBestParameters(status.best_iteration);
+            }
+
             // Recharger l'historique
             loadHistory();
         }
@@ -214,11 +219,6 @@ function displayResults(results) {
         roiCard.classList.add('success');
     } else {
         roiCard.classList.remove('success');
-    }
-
-    // Afficher les meilleurs paramètres si disponibles
-    if (results.best_iteration) {
-        displayBestParameters(results.best_iteration);
     }
 }
 
