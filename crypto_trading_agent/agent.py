@@ -186,11 +186,11 @@ class TradingAgent:
                     contributing_influencers = []
                     if self.strategy.use_twitter_signals and twitter_signals:
                         for signal in twitter_signals:
-                            if signal['symbol'] == symbol and signal['sentiment'] in ['bullish', 'very_bullish']:
+                            if signal.symbol == symbol and signal.signal == 'BUY':
                                 contributing_influencers.append({
-                                    'influencer': signal['influencer'],
-                                    'confidence': signal['confidence'],
-                                    'sentiment': signal['sentiment']
+                                    'influencer': signal.account,
+                                    'confidence': signal.confidence,
+                                    'sentiment': signal.signal
                                 })
 
                     # Tracker ce trade pour l'analyse de fiabilité
