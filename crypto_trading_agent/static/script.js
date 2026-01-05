@@ -5,6 +5,7 @@ let pollInterval = null;
 // Chargement initial
 document.addEventListener('DOMContentLoaded', () => {
     loadHistory();
+    loadBestParametersFromHistory();
 });
 
 // Démarrer la simulation
@@ -95,16 +96,16 @@ function getConfig() {
             use_twitter: document.getElementById('use-twitter').checked
         },
         strategy_params: {
-            rsi_period: 14,
-            rsi_oversold: 30,
-            rsi_overbought: 70,
-            ema_short: 12,
-            ema_long: 26,
-            macd_signal: 9,
-            bb_period: 20,
-            bb_std: 2,
-            momentum_period: 10,
-            min_history: 30,
+            rsi_period: parseInt(document.getElementById('rsi-period').value),
+            rsi_oversold: parseInt(document.getElementById('rsi-oversold').value),
+            rsi_overbought: parseInt(document.getElementById('rsi-overbought').value),
+            ema_short: parseInt(document.getElementById('ema-short').value),
+            ema_long: parseInt(document.getElementById('ema-long').value),
+            macd_signal: parseInt(document.getElementById('macd-signal').value),
+            bb_period: parseInt(document.getElementById('bb-period').value),
+            bb_std: parseFloat(document.getElementById('bb-std').value),
+            momentum_period: parseInt(document.getElementById('momentum-period').value),
+            min_history: parseInt(document.getElementById('min-history').value),
             risk_per_trade: parseFloat(document.getElementById('risk-per-trade').value) / 100,
             max_allocation_per_coin: parseFloat(document.getElementById('max-allocation').value) / 100,
             stop_loss: parseFloat(document.getElementById('stop-loss').value) / 100,
@@ -327,11 +328,21 @@ function displayBestParametersInline(bestIteration) {
     document.getElementById('best-score-inline').textContent =
         `${bestIteration.score.toFixed(1)}/100`;
 
-    // Construire la grille compacte de paramètres
+    // Construire la grille compacte de paramètres avec TOUS les paramètres
     const params = bestIteration.parameters;
     const paramsGrid = document.getElementById('best-params-inline-grid');
 
     const paramsList = [
+        { name: 'RSI Period', value: params.rsi_period || '-' },
+        { name: 'RSI Oversold', value: params.rsi_oversold || '-' },
+        { name: 'RSI Overbought', value: params.rsi_overbought || '-' },
+        { name: 'EMA Short', value: params.ema_short || '-' },
+        { name: 'EMA Long', value: params.ema_long || '-' },
+        { name: 'MACD Signal', value: params.macd_signal || '-' },
+        { name: 'BB Period', value: params.bb_period || '-' },
+        { name: 'BB Std', value: params.bb_std || '-' },
+        { name: 'Momentum', value: params.momentum_period || '-' },
+        { name: 'Min History', value: params.min_history || '-' },
         { name: 'Risk/Trade', value: `${(params.risk_per_trade * 100).toFixed(0)}%` },
         { name: 'Max Alloc', value: `${(params.max_allocation_per_coin * 100).toFixed(0)}%` },
         { name: 'Stop Loss', value: `${(params.stop_loss * 100).toFixed(0)}%` },
@@ -347,6 +358,81 @@ function displayBestParametersInline(bestIteration) {
     `).join('');
 }
 
+// Charger les meilleurs paramètres de l'historique complet au démarrage
+async function loadBestParametersFromHistory() {
+    try {
+        const response = await fetch(`${API_URL}/best-parameters`);
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        if (data.parameters) {
+            console.log('Loading best parameters from history:', data);
+            updateAllParameters(data.parameters);
+
+            // Afficher un message discret
+            if (data.roi !== undefined) {
+                console.log(`Using best parameters from history (ROI: ${data.roi.toFixed(2)}%)`);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading best parameters:', error);
+        // Silencieux - utilise les valeurs par défaut
+    }
+}
+
+// Mettre à jour tous les champs de paramètres avec de nouvelles valeurs
+function updateAllParameters(params) {
+    // Indicateurs techniques
+    if (params.rsi_period !== undefined) {
+        document.getElementById('rsi-period').value = params.rsi_period;
+    }
+    if (params.rsi_oversold !== undefined) {
+        document.getElementById('rsi-oversold').value = params.rsi_oversold;
+    }
+    if (params.rsi_overbought !== undefined) {
+        document.getElementById('rsi-overbought').value = params.rsi_overbought;
+    }
+    if (params.ema_short !== undefined) {
+        document.getElementById('ema-short').value = params.ema_short;
+    }
+    if (params.ema_long !== undefined) {
+        document.getElementById('ema-long').value = params.ema_long;
+    }
+    if (params.macd_signal !== undefined) {
+        document.getElementById('macd-signal').value = params.macd_signal;
+    }
+    if (params.bb_period !== undefined) {
+        document.getElementById('bb-period').value = params.bb_period;
+    }
+    if (params.bb_std !== undefined) {
+        document.getElementById('bb-std').value = params.bb_std;
+    }
+    if (params.momentum_period !== undefined) {
+        document.getElementById('momentum-period').value = params.momentum_period;
+    }
+    if (params.min_history !== undefined) {
+        document.getElementById('min-history').value = params.min_history;
+    }
+
+    // Paramètres de risque
+    if (params.risk_per_trade !== undefined) {
+        document.getElementById('risk-per-trade').value = (params.risk_per_trade * 100).toFixed(0);
+    }
+    if (params.max_allocation_per_coin !== undefined) {
+        document.getElementById('max-allocation').value = (params.max_allocation_per_coin * 100).toFixed(0);
+    }
+    if (params.stop_loss !== undefined) {
+        document.getElementById('stop-loss').value = (params.stop_loss * 100).toFixed(0);
+    }
+    if (params.take_profit !== undefined) {
+        document.getElementById('take-profit').value = (params.take_profit * 100).toFixed(0);
+    }
+    if (params.twitter_weight !== undefined) {
+        document.getElementById('twitter-weight').value = (params.twitter_weight * 100).toFixed(0);
+    }
+}
+
 // Appliquer les meilleurs paramètres aux champs de configuration
 function applyBestParameters() {
     if (!currentBestParameters) {
@@ -354,14 +440,7 @@ function applyBestParameters() {
         return;
     }
 
-    const params = currentBestParameters;
-
-    // Appliquer les paramètres de stratégie
-    document.getElementById('risk-per-trade').value = (params.risk_per_trade * 100).toFixed(0);
-    document.getElementById('max-allocation').value = (params.max_allocation_per_coin * 100).toFixed(0);
-    document.getElementById('stop-loss').value = (params.stop_loss * 100).toFixed(0);
-    document.getElementById('take-profit').value = (params.take_profit * 100).toFixed(0);
-    document.getElementById('twitter-weight').value = (params.twitter_weight * 100).toFixed(0);
+    updateAllParameters(currentBestParameters);
 
     // Effet visuel de confirmation
     const section = document.getElementById('best-params-inline');

@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="config-section">
-                    <h3>Paramètres de Stratégie</h3>
+                    <h3>Paramètres de Risque</h3>
                     <div class="form-group">
                         <label>Risque par Trade (%)</label>
                         <input type="number" id="risk-per-trade" value="15" min="1" max="50" step="1">
@@ -67,6 +67,54 @@
                     <div class="form-group">
                         <label>Poids Twitter (%)</label>
                         <input type="number" id="twitter-weight" value="30" min="0" max="100" step="5">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Indicateurs Techniques</h3>
+                    <div class="form-group">
+                        <label>RSI Period</label>
+                        <input type="number" id="rsi-period" value="14" min="5" max="30" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>RSI Oversold</label>
+                        <input type="number" id="rsi-oversold" value="30" min="10" max="40" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>RSI Overbought</label>
+                        <input type="number" id="rsi-overbought" value="70" min="60" max="90" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>EMA Court</label>
+                        <input type="number" id="ema-short" value="12" min="5" max="20" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>EMA Long</label>
+                        <input type="number" id="ema-long" value="26" min="15" max="50" step="1">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Autres Indicateurs</h3>
+                    <div class="form-group">
+                        <label>MACD Signal</label>
+                        <input type="number" id="macd-signal" value="9" min="5" max="15" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Bollinger Bands Period</label>
+                        <input type="number" id="bb-period" value="20" min="10" max="30" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Bollinger Bands Std</label>
+                        <input type="number" id="bb-std" value="2" min="1" max="3" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Momentum Period</label>
+                        <input type="number" id="momentum-period" value="10" min="5" max="20" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Historique Minimum</label>
+                        <input type="number" id="min-history" value="30" min="20" max="50" step="5">
                     </div>
                 </div>
             </div>

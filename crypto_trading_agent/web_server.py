@@ -124,6 +124,23 @@ def clear_history():
     return jsonify({'status': 'cleared'})
 
 
+@app.route('/api/best-parameters', methods=['GET'])
+def get_best_parameters():
+    """Récupère les meilleurs paramètres de tout l'historique"""
+    if not history.iterations or len(history.iterations) == 0:
+        return jsonify({'parameters': None})
+
+    # Trouver l'itération avec le meilleur ROI
+    best_iteration = max(history.iterations, key=lambda x: x.get('roi', float('-inf')))
+
+    return jsonify({
+        'parameters': best_iteration.get('parameters', {}),
+        'roi': best_iteration.get('roi', 0),
+        'score': best_iteration.get('score', 0),
+        'iteration': best_iteration.get('iteration', 0)
+    })
+
+
 def run_simulation(config):
     """Exécute la simulation avec la configuration donnée"""
     try:
