@@ -9,14 +9,17 @@ from datetime import datetime, timedelta
 class SyntheticDataGenerator:
     """Génère des données synthétiques réalistes de cryptomonnaies"""
 
-    def __init__(self, seed=42):
+    def __init__(self, seed=None):
         """
         Initialise le générateur
 
         Args:
-            seed: Seed pour la reproductibilité
+            seed: Seed pour la reproductibilité (None = aléatoire)
         """
-        np.random.seed(seed)
+        self.seed = seed
+        if seed is not None:
+            np.random.seed(seed)
+
         self.cryptos = {
             'BTC': {'initial_price': 80000, 'volatility': 0.03, 'trend': 0.0002},
             'ETH': {'initial_price': 3500, 'volatility': 0.04, 'trend': 0.0003},
@@ -47,20 +50,34 @@ class SyntheticDataGenerator:
         if not config:
             return pd.DataFrame()
 
+        # Utiliser un seed basé sur les dates et le symbole pour avoir des données
+        # différentes selon la période, mais reproductibles
+        date_seed = hash(f"{symbol}_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}") % (2**32)
+        np.random.seed(date_seed)
+
         # Générer les dates
         dates = pd.date_range(start=start_date, end=end_date, freq='D')
         num_days = len(dates)
 
-        # Prix initial
-        prices = [config['initial_price']]
+        # Prix initial avec variation selon la période
+        base_price = config['initial_price']
+        # Ajouter une variation de ±20% selon la date de début
+        start_variation = np.sin(start_date.toordinal() / 100) * 0.2
+        initial_price = base_price * (1 + start_variation)
+
+        prices = [initial_price]
 
         # Générer les prix avec un random walk avec tendance
         for i in range(1, num_days):
             # Composante aléatoire (volatilité)
             random_change = np.random.normal(0, config['volatility'])
 
-            # Composante de tendance
+            # Composante de tendance (varier selon la période)
             trend = config['trend']
+
+            # Ajouter des cycles de marché (bull/bear)
+            cycle = np.sin(i / 30) * 0.001  # Cycle mensuel
+            trend += cycle
 
             # Ajouter quelques événements aléatoires (bull/bear runs)
             if np.random.random() < 0.05:  # 5% de chance d'événement
@@ -72,7 +89,7 @@ class SyntheticDataGenerator:
             new_price = prices[-1] * price_change
 
             # S'assurer que le prix reste positif
-            new_price = max(new_price, config['initial_price'] * 0.1)
+            new_price = max(new_price, initial_price * 0.1)
 
             prices.append(new_price)
 
