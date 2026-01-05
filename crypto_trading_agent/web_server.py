@@ -254,6 +254,13 @@ def run_simulation(config):
         simulation_state['progress'] = 100
         simulation_state['logs'].append("Simulation completed!")
 
+        # Obtenir le classement des influenceurs Twitter (utiliser le dernier backtester)
+        twitter_rankings = []
+        suggested_weights = {}
+        if use_twitter and 'backtester' in locals():
+            twitter_rankings = backtester.agent.get_influencer_rankings()
+            suggested_weights = backtester.agent.get_suggested_twitter_weights()
+
         # Afficher le résumé de la meilleure itération
         if best_iteration:
             simulation_state['logs'].append("")
@@ -282,7 +289,30 @@ def run_simulation(config):
             simulation_state['logs'].append(f"  • Twitter Weight: {params.get('twitter_weight', 'N/A'):.2%}")
             simulation_state['logs'].append("=" * 60)
 
-            # Ajouter le résumé aux résultats (sans référence circulaire)
+        # Afficher le classement des influenceurs Twitter
+        if twitter_rankings:
+            simulation_state['logs'].append("")
+            simulation_state['logs'].append("=" * 60)
+            simulation_state['logs'].append("🐦 CLASSEMENT DES INFLUENCEURS TWITTER")
+            simulation_state['logs'].append("=" * 60)
+
+            for i, rank in enumerate(twitter_rankings[:10], 1):  # Top 10
+                simulation_state['logs'].append(
+                    f"{i}. {rank['influencer']} - "
+                    f"Win Rate: {rank['win_rate']:.1f}% | "
+                    f"Trades: {rank['total_trades']} | "
+                    f"PNL Moyen: {rank['avg_pnl']:+.2f}% | "
+                    f"Score: {rank['reliability_score']:.1f}"
+                )
+
+            simulation_state['logs'].append("")
+            simulation_state['logs'].append("💡 POIDS SUGGÉRÉS (basés sur la performance):")
+            for influencer, weight in sorted(suggested_weights.items(), key=lambda x: x[1], reverse=True)[:10]:
+                simulation_state['logs'].append(f"  • {influencer}: {weight}")
+            simulation_state['logs'].append("=" * 60)
+
+        # Ajouter le résumé aux résultats (sans référence circulaire)
+        if best_iteration:
             simulation_state['best_iteration'] = {
                 'iteration': best_iteration['iteration'],
                 'roi': best_iteration['roi'],
@@ -293,14 +323,20 @@ def run_simulation(config):
                 'profit_loss': best_iteration['profit_loss'],
                 'parameters': best_iteration['parameters'].copy()
             }
-            simulation_state['all_iterations_summary'] = [
-                {
-                    'iteration': it['iteration'],
-                    'roi': it['roi'],
-                    'score': it['score']
-                }
-                for it in all_iterations
-            ]
+
+        simulation_state['all_iterations_summary'] = [
+            {
+                'iteration': it['iteration'],
+                'roi': it['roi'],
+                'score': it['score']
+            }
+            for it in all_iterations
+        ]
+
+        # Ajouter les classements Twitter
+        if twitter_rankings:
+            simulation_state['twitter_rankings'] = twitter_rankings[:10]  # Top 10
+            simulation_state['suggested_twitter_weights'] = suggested_weights
 
     except Exception as e:
         simulation_state['running'] = False

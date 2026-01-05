@@ -71,6 +71,26 @@
                 </div>
             </div>
 
+            <!-- Best Parameters Section (initially hidden) -->
+            <div id="best-params-inline" style="display: none; margin-top: 30px;">
+                <div class="best-params-header">
+                    <h3>🏆 Meilleurs Paramètres Trouvés</h3>
+                    <button class="btn btn-success btn-sm" onclick="applyBestParameters()">
+                        ✨ Appliquer Ces Paramètres
+                    </button>
+                </div>
+
+                <div class="best-iteration-compact">
+                    <span><strong>Itération:</strong> <span id="best-iter-num-inline">-</span></span>
+                    <span><strong>ROI:</strong> <span id="best-roi-inline" class="highlight">-</span></span>
+                    <span><strong>Score:</strong> <span id="best-score-inline">-</span></span>
+                </div>
+
+                <div class="params-compact-grid" id="best-params-inline-grid">
+                    <!-- Les paramètres seront insérés ici par JavaScript -->
+                </div>
+            </div>
+
             <div class="button-group">
                 <button id="start-btn" class="btn btn-primary" onclick="startSimulation()">
                     🚀 Démarrer la Simulation
@@ -176,6 +196,24 @@
 
             <div class="params-grid" id="best-params-grid">
                 <!-- Les paramètres seront insérés ici par JavaScript -->
+            </div>
+        </section>
+
+        <!-- Twitter Rankings Section -->
+        <section class="card" id="twitter-rankings-section" style="display: none;">
+            <h2>🐦 Classement des Influenceurs Twitter</h2>
+            <p class="section-description">Basé sur les performances réelles des trades influencés</p>
+
+            <div class="twitter-rankings-grid" id="twitter-rankings-grid">
+                <!-- Le classement sera inséré ici par JavaScript -->
+            </div>
+
+            <div id="suggested-weights-section" style="margin-top: 30px; display: none;">
+                <h3>💡 Poids Suggérés (Optimisés)</h3>
+                <p class="hint-text">Ces poids ont été calculés automatiquement selon la fiabilité de chaque influenceur</p>
+                <div class="weights-grid" id="suggested-weights-grid">
+                    <!-- Les poids suggérés seront insérés ici -->
+                </div>
             </div>
         </section>
 

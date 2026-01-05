@@ -478,6 +478,180 @@ body {
     font-size: 1.1rem;
 }
 
+/* Best Parameters Inline */
+.best-params-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border-radius: 8px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.best-params-header h3 {
+    margin: 0;
+    color: #ffd700;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.best-iteration-compact {
+    display: flex;
+    gap: 30px;
+    padding: 15px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.best-iteration-compact span {
+    color: var(--text-secondary);
+}
+
+.best-iteration-compact .highlight {
+    color: #ffd700;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.params-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.param-compact-item {
+    background: var(--bg-dark);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+.param-compact-name {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.param-compact-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Twitter Rankings Section */
+.section-description {
+    color: var(--text-secondary);
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.twitter-rankings-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.twitter-rank-item {
+    display: grid;
+    grid-template-columns: 50px 1fr auto auto auto auto;
+    gap: 20px;
+    align-items: center;
+    padding: 15px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.twitter-rank-item:hover {
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.rank-position {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+}
+
+.rank-influencer {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.rank-stat {
+    text-align: center;
+}
+
+.rank-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 3px;
+}
+
+.rank-stat-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.rank-stat-value.positive {
+    color: var(--success);
+}
+
+.rank-stat-value.negative {
+    color: var(--danger);
+}
+
+.weights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.weight-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-dark);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.weight-influencer {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.weight-value {
+    color: var(--success);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.hint-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
 /* Footer */
 .footer {
     text-align: center;
@@ -530,5 +704,37 @@ body {
 
     .params-grid {
         grid-template-columns: 1fr;
+    }
+
+    .params-compact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .twitter-rank-item {
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+    }
+
+    .rank-stat {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px solid var(--border);
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    .best-params-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .best-params-header h3 {
+        text-align: center;
+    }
+
+    .best-iteration-compact {
+        flex-direction: column;
+        gap: 10px;
     }
 }

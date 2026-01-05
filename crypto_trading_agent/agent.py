@@ -27,6 +27,9 @@ class TradingAgent:
         self.twitter_generator = twitter_generator or TwitterSignalGenerator()
         self.entry_prices = {}  # {symbol: entry_price} pour tracking des positions
         self.decisions_log = []
+        # Tracking de la fiabilité des influenceurs Twitter
+        self.twitter_trade_tracking = []  # Liste des trades avec leurs signaux Twitter
+        self.influencer_stats = {}  # Stats de performance par influenceur
 
     def make_daily_decisions(self, current_date: datetime, all_data: Dict[str, pd.DataFrame],
                             current_prices: Dict[str, float]):
@@ -95,6 +98,39 @@ class TradingAgent:
                 success = self.portfolio.sell_all(symbol, current_price, current_date)
                 if success:
                     pnl = ((current_price - entry_price) / entry_price) * 100
+
+                    # Mettre à jour le tracking Twitter avec le résultat du trade
+                    for trade in self.twitter_trade_tracking:
+                        if trade['symbol'] == symbol and not trade['closed']:
+                            trade['closed'] = True
+                            trade['close_price'] = current_price
+                            trade['pnl_pct'] = pnl
+                            trade['profitable'] = pnl > 0
+
+                            # Mettre à jour les stats de chaque influenceur
+                            for inf in trade['influencers']:
+                                influencer_name = inf['influencer']
+                                if influencer_name not in self.influencer_stats:
+                                    self.influencer_stats[influencer_name] = {
+                                        'total_trades': 0,
+                                        'winning_trades': 0,
+                                        'losing_trades': 0,
+                                        'total_pnl': 0,
+                                        'confidence_sum': 0
+                                    }
+
+                                stats = self.influencer_stats[influencer_name]
+                                stats['total_trades'] += 1
+                                stats['total_pnl'] += pnl
+                                stats['confidence_sum'] += inf['confidence']
+
+                                if pnl > 0:
+                                    stats['winning_trades'] += 1
+                                else:
+                                    stats['losing_trades'] += 1
+
+                            break
+
                     decision['actions'].append({
                         'action': 'SELL',
                         'symbol': symbol,
@@ -145,6 +181,28 @@ class TradingAgent:
                 success = self.portfolio.buy(symbol, position_size, current_price, current_date)
                 if success:
                     self.entry_prices[symbol] = current_price
+
+                    # Enregistrer les influenceurs Twitter qui ont contribué à ce trade
+                    contributing_influencers = []
+                    if self.strategy.use_twitter_signals and twitter_signals:
+                        for signal in twitter_signals:
+                            if signal['symbol'] == symbol and signal['sentiment'] in ['bullish', 'very_bullish']:
+                                contributing_influencers.append({
+                                    'influencer': signal['influencer'],
+                                    'confidence': signal['confidence'],
+                                    'sentiment': signal['sentiment']
+                                })
+
+                    # Tracker ce trade pour l'analyse de fiabilité
+                    self.twitter_trade_tracking.append({
+                        'date': current_date,
+                        'symbol': symbol,
+                        'action': 'BUY',
+                        'price': current_price,
+                        'influencers': contributing_influencers,
+                        'closed': False
+                    })
+
                     decision['actions'].append({
                         'action': 'BUY',
                         'symbol': symbol,
@@ -293,3 +351,67 @@ class TradingAgent:
             new_params: Nouveaux paramètres
         """
         self.strategy.update_parameters(new_params)
+
+    def get_influencer_rankings(self) -> List[Dict]:
+        """
+        Calcule et retourne le classement des influenceurs Twitter par fiabilité
+
+        Returns:
+            Liste des influenceurs classés par win rate
+        """
+        rankings = []
+
+        for influencer, stats in self.influencer_stats.items():
+            if stats['total_trades'] > 0:
+                win_rate = (stats['winning_trades'] / stats['total_trades']) * 100
+                avg_pnl = stats['total_pnl'] / stats['total_trades']
+                avg_confidence = stats['confidence_sum'] / stats['total_trades']
+
+                # Calculer un score de fiabilité global
+                reliability_score = (win_rate * 0.6) + (avg_pnl * 0.3) + (avg_confidence * 10 * 0.1)
+
+                rankings.append({
+                    'influencer': influencer,
+                    'win_rate': win_rate,
+                    'total_trades': stats['total_trades'],
+                    'winning_trades': stats['winning_trades'],
+                    'losing_trades': stats['losing_trades'],
+                    'avg_pnl': avg_pnl,
+                    'total_pnl': stats['total_pnl'],
+                    'avg_confidence': avg_confidence,
+                    'reliability_score': reliability_score
+                })
+
+        # Trier par score de fiabilité
+        rankings.sort(key=lambda x: x['reliability_score'], reverse=True)
+
+        return rankings
+
+    def get_suggested_twitter_weights(self) -> Dict[str, float]:
+        """
+        Suggère de nouveaux poids pour les influenceurs basés sur leur performance
+
+        Returns:
+            Dict avec les nouveaux poids suggérés
+        """
+        rankings = self.get_influencer_rankings()
+
+        if not rankings:
+            return {}
+
+        # Normaliser les scores de fiabilité pour créer des poids
+        total_score = sum(r['reliability_score'] for r in rankings if r['reliability_score'] > 0)
+
+        if total_score == 0:
+            return {}
+
+        suggested_weights = {}
+        for rank in rankings:
+            if rank['reliability_score'] > 0:
+                # Poids proportionnel au score de fiabilité
+                weight = max(0.5, min(1.5, rank['reliability_score'] / (total_score / len(rankings))))
+                suggested_weights[rank['influencer']] = round(weight, 2)
+            else:
+                suggested_weights[rank['influencer']] = 0.5  # Poids minimal pour mauvaise performance
+
+        return suggested_weights

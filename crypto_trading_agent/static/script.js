@@ -153,6 +153,12 @@ async function updateStatus() {
             // Afficher les meilleurs paramètres si disponibles
             if (status.best_iteration) {
                 displayBestParameters(status.best_iteration);
+                displayBestParametersInline(status.best_iteration);
+            }
+
+            // Afficher le classement Twitter si disponible
+            if (status.twitter_rankings) {
+                displayTwitterRankings(status.twitter_rankings, status.suggested_twitter_weights);
             }
 
             // Recharger l'historique
@@ -300,5 +306,129 @@ async function loadHistory() {
         }).reverse().join('');
     } catch (error) {
         console.error('Error loading history:', error);
+    }
+}
+
+// Variable globale pour stocker les meilleurs paramètres
+let currentBestParameters = null;
+
+// Afficher les meilleurs paramètres inline (près de la config)
+function displayBestParametersInline(bestIteration) {
+    const section = document.getElementById('best-params-inline');
+    section.style.display = 'block';
+
+    // Stocker les paramètres pour l'application ultérieure
+    currentBestParameters = bestIteration.parameters;
+
+    // Mettre à jour l'en-tête
+    document.getElementById('best-iter-num-inline').textContent = bestIteration.iteration;
+    document.getElementById('best-roi-inline').textContent =
+        `${bestIteration.roi >= 0 ? '+' : ''}${bestIteration.roi.toFixed(2)}%`;
+    document.getElementById('best-score-inline').textContent =
+        `${bestIteration.score.toFixed(1)}/100`;
+
+    // Construire la grille compacte de paramètres
+    const params = bestIteration.parameters;
+    const paramsGrid = document.getElementById('best-params-inline-grid');
+
+    const paramsList = [
+        { name: 'Risk/Trade', value: `${(params.risk_per_trade * 100).toFixed(0)}%` },
+        { name: 'Max Alloc', value: `${(params.max_allocation_per_coin * 100).toFixed(0)}%` },
+        { name: 'Stop Loss', value: `${(params.stop_loss * 100).toFixed(0)}%` },
+        { name: 'Take Profit', value: `${(params.take_profit * 100).toFixed(0)}%` },
+        { name: 'Twitter Weight', value: `${(params.twitter_weight * 100).toFixed(0)}%` }
+    ];
+
+    paramsGrid.innerHTML = paramsList.map(param => `
+        <div class="param-compact-item">
+            <div class="param-compact-name">${param.name}</div>
+            <div class="param-compact-value">${param.value}</div>
+        </div>
+    `).join('');
+}
+
+// Appliquer les meilleurs paramètres aux champs de configuration
+function applyBestParameters() {
+    if (!currentBestParameters) {
+        alert('Aucun paramètre optimal disponible');
+        return;
+    }
+
+    const params = currentBestParameters;
+
+    // Appliquer les paramètres de stratégie
+    document.getElementById('risk-per-trade').value = (params.risk_per_trade * 100).toFixed(0);
+    document.getElementById('max-allocation').value = (params.max_allocation_per_coin * 100).toFixed(0);
+    document.getElementById('stop-loss').value = (params.stop_loss * 100).toFixed(0);
+    document.getElementById('take-profit').value = (params.take_profit * 100).toFixed(0);
+    document.getElementById('twitter-weight').value = (params.twitter_weight * 100).toFixed(0);
+
+    // Effet visuel de confirmation
+    const section = document.getElementById('best-params-inline');
+    section.style.animation = 'pulse 0.5s';
+    setTimeout(() => {
+        section.style.animation = '';
+    }, 500);
+
+    alert('✅ Paramètres optimaux appliqués avec succès !');
+}
+
+// Afficher le classement Twitter
+function displayTwitterRankings(rankings, suggestedWeights) {
+    const section = document.getElementById('twitter-rankings-section');
+    section.style.display = 'block';
+
+    const grid = document.getElementById('twitter-rankings-grid');
+
+    if (!rankings || rankings.length === 0) {
+        grid.innerHTML = '<p class="no-data">Aucune donnée Twitter disponible</p>';
+        return;
+    }
+
+    grid.innerHTML = rankings.map((rank, index) => `
+        <div class="twitter-rank-item">
+            <div class="rank-position">${index + 1}</div>
+            <div class="rank-influencer">${rank.influencer}</div>
+            <div class="rank-stat">
+                <span class="rank-stat-label">Win Rate</span>
+                <span class="rank-stat-value ${rank.win_rate >= 50 ? 'positive' : 'negative'}">
+                    ${rank.win_rate.toFixed(1)}%
+                </span>
+            </div>
+            <div class="rank-stat">
+                <span class="rank-stat-label">Trades</span>
+                <span class="rank-stat-value">${rank.total_trades}</span>
+            </div>
+            <div class="rank-stat">
+                <span class="rank-stat-label">PNL Moyen</span>
+                <span class="rank-stat-value ${rank.avg_pnl >= 0 ? 'positive' : 'negative'}">
+                    ${rank.avg_pnl >= 0 ? '+' : ''}${rank.avg_pnl.toFixed(2)}%
+                </span>
+            </div>
+            <div class="rank-stat">
+                <span class="rank-stat-label">Score</span>
+                <span class="rank-stat-value">${rank.reliability_score.toFixed(1)}</span>
+            </div>
+        </div>
+    `).join('');
+
+    // Afficher les poids suggérés
+    if (suggestedWeights && Object.keys(suggestedWeights).length > 0) {
+        const weightsSection = document.getElementById('suggested-weights-section');
+        weightsSection.style.display = 'block';
+
+        const weightsGrid = document.getElementById('suggested-weights-grid');
+
+        // Trier par poids décroissant
+        const sortedWeights = Object.entries(suggestedWeights)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 10);
+
+        weightsGrid.innerHTML = sortedWeights.map(([influencer, weight]) => `
+            <div class="weight-item">
+                <span class="weight-influencer">${influencer}</span>
+                <span class="weight-value">${weight.toFixed(2)}</span>
+            </div>
+        `).join('');
     }
 }
