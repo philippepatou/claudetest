@@ -169,7 +169,8 @@ def run_simulation(config):
             simulation_state['current_iteration'] = iteration
             simulation_state['logs'].append(f"Starting iteration {iteration}/{iterations}")
 
-            # Créer le backtester
+            # Créer le backtester avec variation_seed = numéro d'itération
+            # Cela génère des données différentes pour chaque itération
             backtester = Backtester(
                 start_date=start_date,
                 end_date=end_date,
@@ -177,7 +178,8 @@ def run_simulation(config):
                 strategy_params=strategy_params,
                 delay_per_day=0.0,  # Pas de délai pour l'UI
                 use_synthetic_data=True,
-                use_twitter_signals=use_twitter
+                use_twitter_signals=use_twitter,
+                variation_seed=iteration  # Chaque itération a des données de marché différentes
             )
 
             # Charger les données

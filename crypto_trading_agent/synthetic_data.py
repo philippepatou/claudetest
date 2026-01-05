@@ -34,7 +34,7 @@ class SyntheticDataGenerator:
         }
 
     def generate_price_series(self, symbol: str, start_date: datetime,
-                             end_date: datetime) -> pd.DataFrame:
+                             end_date: datetime, variation_seed: int = 0) -> pd.DataFrame:
         """
         Génère une série de prix réaliste avec tendance et volatilité
 
@@ -42,6 +42,7 @@ class SyntheticDataGenerator:
             symbol: Symbole de la crypto
             start_date: Date de début
             end_date: Date de fin
+            variation_seed: Seed additionnel pour varier les données (pour itérations multiples)
 
         Returns:
             DataFrame avec timestamp et price
@@ -50,19 +51,19 @@ class SyntheticDataGenerator:
         if not config:
             return pd.DataFrame()
 
-        # Utiliser un seed basé sur les dates et le symbole pour avoir des données
-        # différentes selon la période, mais reproductibles
-        date_seed = hash(f"{symbol}_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}") % (2**32)
+        # Utiliser un seed basé sur les dates, le symbole ET le variation_seed
+        # Cela permet d'avoir des données différentes pour chaque itération
+        date_seed = hash(f"{symbol}_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}_{variation_seed}") % (2**32)
         np.random.seed(date_seed)
 
         # Générer les dates
         dates = pd.date_range(start=start_date, end=end_date, freq='D')
         num_days = len(dates)
 
-        # Prix initial avec variation selon la période
+        # Prix initial avec variation selon la période ET le variation_seed
         base_price = config['initial_price']
         # Ajouter une variation de ±20% selon la date de début
-        start_variation = np.sin(start_date.toordinal() / 100) * 0.2
+        start_variation = np.sin(start_date.toordinal() / 100 + variation_seed) * 0.2
         initial_price = base_price * (1 + start_variation)
 
         prices = [initial_price]
@@ -75,8 +76,8 @@ class SyntheticDataGenerator:
             # Composante de tendance (varier selon la période)
             trend = config['trend']
 
-            # Ajouter des cycles de marché (bull/bear)
-            cycle = np.sin(i / 30) * 0.001  # Cycle mensuel
+            # Ajouter des cycles de marché (bull/bear) - varier selon variation_seed
+            cycle = np.sin((i + variation_seed * 10) / 30) * 0.001  # Cycle mensuel décalé
             trend += cycle
 
             # Ajouter quelques événements aléatoires (bull/bear runs)
@@ -103,13 +104,14 @@ class SyntheticDataGenerator:
         return df
 
     def generate_all_data(self, start_date: datetime,
-                         end_date: datetime) -> dict:
+                         end_date: datetime, variation_seed: int = 0) -> dict:
         """
         Génère les données pour toutes les cryptos
 
         Args:
             start_date: Date de début
             end_date: Date de fin
+            variation_seed: Seed additionnel pour varier les données
 
         Returns:
             Dict {symbol: DataFrame}
@@ -117,7 +119,7 @@ class SyntheticDataGenerator:
         all_data = {}
 
         for symbol in self.cryptos.keys():
-            df = self.generate_price_series(symbol, start_date, end_date)
+            df = self.generate_price_series(symbol, start_date, end_date, variation_seed)
             if not df.empty:
                 all_data[symbol] = df
 

@@ -20,7 +20,8 @@ class Backtester:
                  strategy_params: Dict = None,
                  delay_per_day: float = 5.0,
                  use_synthetic_data: bool = False,
-                 use_twitter_signals: bool = True):
+                 use_twitter_signals: bool = True,
+                 variation_seed: int = 0):
         """
         Initialise le backtester
 
@@ -32,6 +33,7 @@ class Backtester:
             delay_per_day: Délai en secondes par jour simulé
             use_synthetic_data: Utiliser des données synthétiques au lieu de l'API
             use_twitter_signals: Utiliser les signaux Twitter (True par défaut)
+            variation_seed: Seed pour varier les données synthétiques entre itérations
         """
         self.start_date = start_date
         self.end_date = end_date
@@ -40,6 +42,7 @@ class Backtester:
         self.delay_per_day = delay_per_day
         self.use_synthetic_data = use_synthetic_data
         self.use_twitter_signals = use_twitter_signals
+        self.variation_seed = variation_seed
 
         # Initialiser les composants
         if use_synthetic_data:
@@ -66,10 +69,11 @@ class Backtester:
         print(f"Period: {self.start_date.strftime('%Y-%m-%d')} to {self.end_date.strftime('%Y-%m-%d')}")
 
         if self.use_synthetic_data:
-            print("Using synthetic data (demo mode)")
+            print(f"Using synthetic data (demo mode, variation={self.variation_seed})")
             self.all_data = self.data_fetcher.generate_all_data(
                 self.start_date,
-                self.end_date
+                self.end_date,
+                variation_seed=self.variation_seed
             )
         else:
             print("Fetching real data from CoinGecko API")
