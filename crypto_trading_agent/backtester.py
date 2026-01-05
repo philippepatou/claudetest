@@ -19,7 +19,8 @@ class Backtester:
                  initial_balance: float = 1000.0,
                  strategy_params: Dict = None,
                  delay_per_day: float = 5.0,
-                 use_synthetic_data: bool = False):
+                 use_synthetic_data: bool = False,
+                 use_twitter_signals: bool = True):
         """
         Initialise le backtester
 
@@ -30,6 +31,7 @@ class Backtester:
             strategy_params: Paramètres de la stratégie
             delay_per_day: Délai en secondes par jour simulé
             use_synthetic_data: Utiliser des données synthétiques au lieu de l'API
+            use_twitter_signals: Utiliser les signaux Twitter (True par défaut)
         """
         self.start_date = start_date
         self.end_date = end_date
@@ -37,6 +39,7 @@ class Backtester:
         self.strategy_params = strategy_params or {}
         self.delay_per_day = delay_per_day
         self.use_synthetic_data = use_synthetic_data
+        self.use_twitter_signals = use_twitter_signals
 
         # Initialiser les composants
         if use_synthetic_data:
@@ -45,7 +48,10 @@ class Backtester:
             self.data_fetcher = CryptoDataFetcher()
 
         self.portfolio = Portfolio(initial_balance=initial_balance)
-        self.strategy = TradingStrategy(parameters=strategy_params)
+        self.strategy = TradingStrategy(
+            parameters=strategy_params,
+            use_twitter_signals=use_twitter_signals
+        )
         self.agent = TradingAgent(self.portfolio, self.strategy)
 
         # Données

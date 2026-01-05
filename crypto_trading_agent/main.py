@@ -37,7 +37,8 @@ def run_iteration(iteration_num: int, strategy_params: dict, args, history: Iter
         initial_balance=args.initial_balance,
         strategy_params=strategy_params,
         delay_per_day=args.delay,
-        use_synthetic_data=args.synthetic
+        use_synthetic_data=args.synthetic,
+        use_twitter_signals=args.twitter
     )
 
     # Charger les données
@@ -166,6 +167,13 @@ def main():
         help='Réinitialiser l\'historique et repartir de zéro'
     )
 
+    parser.add_argument(
+        '--no-twitter',
+        action='store_false',
+        dest='twitter',
+        help='Désactiver les signaux Twitter (activés par défaut)'
+    )
+
     args = parser.parse_args()
 
     if args.fast:
@@ -215,6 +223,14 @@ def main():
         print("Using optimized parameters based on historical data...")
         optimization = history.suggest_optimal_parameters(strategy_params)
         strategy_params = optimization['parameters']
+
+        # Corriger les types: certains paramètres doivent être des int
+        int_params = ['rsi_period', 'ema_short', 'ema_long', 'macd_signal',
+                     'bb_period', 'momentum_period', 'min_history']
+        for param in int_params:
+            if param in strategy_params:
+                strategy_params[param] = int(round(strategy_params[param]))
+
         print(f"Starting from parameters optimized over {len(history.iterations)} iterations\n")
 
     all_iterations_results = []

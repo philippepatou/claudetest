@@ -2,25 +2,29 @@
 Agent de trading autonome qui prend des décisions basées sur la stratégie
 """
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 import pandas as pd
 from portfolio import Portfolio
 from trading_strategy import TradingStrategy
+from twitter_signals import TwitterSignalGenerator
 
 
 class TradingAgent:
     """Agent autonome de trading de cryptomonnaies"""
 
-    def __init__(self, portfolio: Portfolio, strategy: TradingStrategy):
+    def __init__(self, portfolio: Portfolio, strategy: TradingStrategy,
+                 twitter_generator: Optional[TwitterSignalGenerator] = None):
         """
         Initialise l'agent
 
         Args:
             portfolio: Instance du portefeuille
             strategy: Instance de la stratégie de trading
+            twitter_generator: Générateur de signaux Twitter (optionnel)
         """
         self.portfolio = portfolio
         self.strategy = strategy
+        self.twitter_generator = twitter_generator or TwitterSignalGenerator()
         self.entry_prices = {}  # {symbol: entry_price} pour tracking des positions
         self.decisions_log = []
 
@@ -41,6 +45,13 @@ class TradingAgent:
             'cash': self.portfolio.cash
         }
 
+        # 0. Générer les signaux Twitter pour la journée
+        twitter_signals = []
+        if self.strategy.use_twitter_signals:
+            twitter_signals = self.twitter_generator.generate_signals_for_date(
+                current_date, all_data
+            )
+
         # 1. Analyser toutes les cryptos
         analyses = {}
         for symbol, df in all_data.items():
@@ -48,7 +59,17 @@ class TradingAgent:
             historical_df = df[df['timestamp'] <= current_date].copy()
 
             if len(historical_df) >= self.strategy.params['min_history']:
-                analyses[symbol] = self.strategy.analyze_crypto(historical_df)
+                # Agréger les signaux Twitter pour ce symbole
+                twitter_signal = None
+                if self.strategy.use_twitter_signals and twitter_signals:
+                    twitter_signal = self.twitter_generator.aggregate_signals(
+                        twitter_signals, symbol
+                    )
+
+                # Analyser avec les signaux Twitter
+                analyses[symbol] = self.strategy.analyze_crypto(
+                    historical_df, twitter_signal=twitter_signal
+                )
             else:
                 analyses[symbol] = {
                     'signal': 'HOLD',

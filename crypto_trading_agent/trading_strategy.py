@@ -1,21 +1,22 @@
 """
 Module de stratégie de trading hybride
-Combine indicateurs techniques et analyse de momentum
+Combine indicateurs techniques, analyse de momentum et signaux Twitter
 """
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 
 class TradingStrategy:
-    """Stratégie de trading hybride avec indicateurs techniques"""
+    """Stratégie de trading hybride avec indicateurs techniques et signaux Twitter"""
 
-    def __init__(self, parameters: Dict = None):
+    def __init__(self, parameters: Dict = None, use_twitter_signals: bool = True):
         """
         Initialise la stratégie avec des paramètres configurables
 
         Args:
             parameters: Dict de paramètres de la stratégie
+            use_twitter_signals: Utiliser les signaux Twitter (True par défaut)
         """
         # Paramètres par défaut
         self.params = {
@@ -33,11 +34,14 @@ class TradingStrategy:
             'max_allocation_per_coin': 0.25,  # Maximum 25% dans une seule crypto
             'stop_loss': 0.10,  # Stop loss à -10%
             'take_profit': 0.20,  # Take profit à +20%
+            'twitter_weight': 0.30,  # Poids des signaux Twitter (30% de l'influence totale)
         }
 
         # Mettre à jour avec les paramètres fournis
         if parameters:
             self.params.update(parameters)
+
+        self.use_twitter_signals = use_twitter_signals
 
     def calculate_rsi(self, prices: pd.Series, period: int = None) -> pd.Series:
         """
@@ -132,12 +136,13 @@ class TradingStrategy:
         """
         return prices.ewm(span=period, adjust=False).mean()
 
-    def analyze_crypto(self, df: pd.DataFrame) -> Dict:
+    def analyze_crypto(self, df: pd.DataFrame, twitter_signal: Optional[Dict] = None) -> Dict:
         """
-        Analyse une crypto avec tous les indicateurs
+        Analyse une crypto avec tous les indicateurs + signaux Twitter
 
         Args:
             df: DataFrame avec colonnes 'timestamp' et 'price'
+            twitter_signal: Signal Twitter agrégé (optionnel)
 
         Returns:
             Dict avec les signaux et scores
@@ -167,67 +172,98 @@ class TradingStrategy:
         current_ema_short = ema_short.iloc[-1]
         current_ema_long = ema_long.iloc[-1]
 
-        # Calcul du score (de -100 à +100)
-        score = 0
+        # Calcul du score technique (de -100 à +100)
+        technical_score = 0
         reasons = []
 
         # 1. RSI (poids: 25 points)
         if current_rsi < self.params['rsi_oversold']:
-            score += 25
+            technical_score += 25
             reasons.append(f"RSI oversold ({current_rsi:.1f})")
         elif current_rsi > self.params['rsi_overbought']:
-            score -= 25
+            technical_score -= 25
             reasons.append(f"RSI overbought ({current_rsi:.1f})")
         else:
             # RSI neutre
             if current_rsi < 50:
-                score += (50 - current_rsi) / 2
+                technical_score += (50 - current_rsi) / 2
             else:
-                score -= (current_rsi - 50) / 2
+                technical_score -= (current_rsi - 50) / 2
 
         # 2. MACD (poids: 25 points)
         if current_macd > current_macd_signal and current_macd_hist > 0:
-            score += 25
+            technical_score += 25
             reasons.append("MACD bullish crossover")
         elif current_macd < current_macd_signal and current_macd_hist < 0:
-            score -= 25
+            technical_score -= 25
             reasons.append("MACD bearish crossover")
 
         # 3. Bollinger Bands (poids: 20 points)
         if current_price < current_bb_lower:
-            score += 20
+            technical_score += 20
             reasons.append("Price below lower BB")
         elif current_price > current_bb_upper:
-            score -= 20
+            technical_score -= 20
             reasons.append("Price above upper BB")
 
         # 4. EMA Trend (poids: 15 points)
         if current_ema_short > current_ema_long:
-            score += 15
+            technical_score += 15
             reasons.append("Bullish EMA trend")
         else:
-            score -= 15
+            technical_score -= 15
             reasons.append("Bearish EMA trend")
 
         # 5. Momentum (poids: 15 points)
         if current_momentum > 5:
-            score += 15
+            technical_score += 15
             reasons.append(f"Strong positive momentum ({current_momentum:.1f}%)")
         elif current_momentum < -5:
-            score -= 15
+            technical_score -= 15
             reasons.append(f"Strong negative momentum ({current_momentum:.1f}%)")
 
-        # Déterminer le signal
-        if score > 40:
+        # 6. Intégrer les signaux Twitter si disponibles
+        final_score = technical_score
+        twitter_contribution = 0
+
+        if self.use_twitter_signals and twitter_signal and twitter_signal.get('num_signals', 0) > 0:
+            twitter_weight = self.params['twitter_weight']
+            technical_weight = 1.0 - twitter_weight
+
+            # Convertir le signal Twitter en score (-100 à +100)
+            tw_sig = twitter_signal['signal']
+            tw_conf = twitter_signal['confidence']
+
+            if tw_sig == 'BUY':
+                twitter_contribution = 100 * tw_conf
+            elif tw_sig == 'SELL':
+                twitter_contribution = -100 * tw_conf
+            else:  # HOLD
+                twitter_contribution = 0
+
+            # Combiner les scores avec pondération
+            final_score = (technical_score * technical_weight +
+                          twitter_contribution * twitter_weight)
+
+            # Ajouter à la raison
+            num_signals = twitter_signal.get('num_signals', 0)
+            reasons.append(
+                f"Twitter: {tw_sig} ({tw_conf:.0%} conf, {num_signals} signals)"
+            )
+
+        # Déterminer le signal final
+        if final_score > 40:
             signal = 'BUY'
-        elif score < -40:
+        elif final_score < -40:
             signal = 'SELL'
         else:
             signal = 'HOLD'
 
         return {
             'signal': signal,
-            'score': score,
+            'score': final_score,
+            'technical_score': technical_score,
+            'twitter_contribution': twitter_contribution,
             'reasons': reasons,
             'indicators': {
                 'rsi': current_rsi,
@@ -239,7 +275,8 @@ class TradingStrategy:
                 'momentum': current_momentum,
                 'ema_short': current_ema_short,
                 'ema_long': current_ema_long
-            }
+            },
+            'twitter_signal': twitter_signal if twitter_signal else None
         }
 
     def rank_opportunities(self, analyses: Dict[str, Dict]) -> List[Tuple[str, Dict]]:
