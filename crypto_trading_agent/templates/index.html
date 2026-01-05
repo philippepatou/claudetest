@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Agent de Trading Crypto - Interface de Contrôle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🤖 Agent de Trading Crypto</h1>
+            <p class="subtitle">Interface de Contrôle et de Visualisation</p>
+        </header>
+
+        <!-- Configuration Panel -->
+        <section class="card">
+            <h2>⚙️ Configuration de la Simulation</h2>
+
+            <div class="config-grid">
+                <div class="config-section">
+                    <h3>Paramètres de Simulation</h3>
+                    <div class="form-group">
+                        <label>Capital Initial (€)</label>
+                        <input type="number" id="initial-balance" value="1000" min="100" step="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre d'Itérations</label>
+                        <input type="number" id="iterations" value="1" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de Début</label>
+                        <input type="date" id="start-date" value="2024-12-24">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de Fin</label>
+                        <input type="date" id="end-date" value="2025-12-24">
+                    </div>
+                    <div class="form-group checkbox">
+                        <label>
+                            <input type="checkbox" id="use-twitter" checked>
+                            Utiliser les Signaux Twitter
+                        </label>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Paramètres de Stratégie</h3>
+                    <div class="form-group">
+                        <label>Risque par Trade (%)</label>
+                        <input type="number" id="risk-per-trade" value="15" min="1" max="50" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Allocation Max par Coin (%)</label>
+                        <input type="number" id="max-allocation" value="25" min="5" max="50" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss (%)</label>
+                        <input type="number" id="stop-loss" value="10" min="1" max="30" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Take Profit (%)</label>
+                        <input type="number" id="take-profit" value="20" min="5" max="100" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Poids Twitter (%)</label>
+                        <input type="number" id="twitter-weight" value="30" min="0" max="100" step="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="start-btn" class="btn btn-primary" onclick="startSimulation()">
+                    🚀 Démarrer la Simulation
+                </button>
+                <button id="stop-btn" class="btn btn-danger" onclick="stopSimulation()" disabled>
+                    ⏹️ Arrêter
+                </button>
+                <button class="btn btn-secondary" onclick="clearHistory()">
+                    🗑️ Effacer l'Historique
+                </button>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="card" id="progress-section" style="display: none;">
+            <h2>📊 Progression de la Simulation</h2>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progress-text">Préparation...</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Itération</div>
+                    <div class="stat-value" id="current-iteration">0 / 0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Jour</div>
+                    <div class="stat-value" id="current-day">0 / 0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Valeur Portefeuille</div>
+                    <div class="stat-value" id="portfolio-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">ROI Actuel</div>
+                    <div class="stat-value" id="current-roi">-</div>
+                </div>
+            </div>
+
+            <div class="logs-container">
+                <h3>📝 Logs de Simulation</h3>
+                <div class="logs" id="logs"></div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="card" id="results-section" style="display: none;">
+            <h2>🏆 Résultats de la Simulation</h2>
+
+            <div class="results-grid">
+                <div class="result-card success">
+                    <div class="result-label">ROI Final</div>
+                    <div class="result-value" id="final-roi">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Valeur Finale</div>
+                    <div class="result-value" id="final-value">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Profit/Perte</div>
+                    <div class="result-value" id="profit-loss">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Nombre de Trades</div>
+                    <div class="result-value" id="num-trades">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Win Rate</div>
+                    <div class="result-value" id="win-rate">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Score Global</div>
+                    <div class="result-value" id="score">-</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="card">
+            <h2>📈 Historique des Itérations</h2>
+
+            <div class="history-summary" id="history-summary">
+                <div class="summary-stat">
+                    <div class="summary-label">Total Itérations</div>
+                    <div class="summary-value" id="total-iterations">0</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">ROI Moyen</div>
+                    <div class="summary-value" id="avg-roi">0%</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Meilleur ROI</div>
+                    <div class="summary-value" id="best-roi">0%</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Pire ROI</div>
+                    <div class="summary-value" id="worst-roi">0%</div>
+                </div>
+            </div>
+
+            <div class="history-table-container">
+                <table class="history-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>ROI</th>
+                            <th>Score</th>
+                            <th>Win Rate</th>
+                            <th>Trades</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td colspan="6" class="no-data">Aucun historique disponible</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🤖 Agent de Trading Crypto v1.0 | Créé avec Claude Code</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
