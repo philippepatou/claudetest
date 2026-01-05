@@ -27,7 +27,9 @@ wheels/
 data/
 reports/
 *.csv
-*.json
+
+# Historique d'itérations (optionnel : commenter cette ligne si vous voulez partager l'historique)
+iteration_history.json
 
 # IDE
 .vscode/

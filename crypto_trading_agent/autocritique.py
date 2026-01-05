@@ -6,21 +6,25 @@ from typing import Dict, List
 import pandas as pd
 import numpy as np
 from agent import TradingAgent
+from iteration_history import IterationHistory
 
 
 class AutoCritique:
     """Système d'autocritique pour analyser et améliorer la stratégie"""
 
-    def __init__(self, agent: TradingAgent, all_data: Dict[str, pd.DataFrame]):
+    def __init__(self, agent: TradingAgent, all_data: Dict[str, pd.DataFrame],
+                 history: IterationHistory = None):
         """
         Initialise le système d'autocritique
 
         Args:
             agent: Instance de l'agent de trading
             all_data: Données historiques complètes
+            history: Historique des itérations précédentes
         """
         self.agent = agent
         self.all_data = all_data
+        self.history = history
         self.analysis_report = {}
 
     def analyze_performance(self, final_prices: Dict[str, float]) -> Dict:
@@ -300,7 +304,7 @@ class AutoCritique:
 
     def suggest_improvements(self) -> Dict:
         """
-        Suggère des améliorations des paramètres de stratégie
+        Suggère des améliorations des paramètres de stratégie basées sur l'historique complet
 
         Returns:
             Dict avec les nouveaux paramètres suggérés
@@ -310,6 +314,113 @@ class AutoCritique:
         print(f"{'='*60}\n")
 
         current_params = self.agent.get_strategy_parameters()
+
+        # Si on a un historique, utiliser l'optimisation avancée
+        if self.history and len(self.history.iterations) > 0:
+            return self._suggest_with_history(current_params)
+        else:
+            return self._suggest_without_history(current_params)
+
+    def _suggest_with_history(self, current_params: Dict) -> Dict:
+        """
+        Suggère des paramètres basés sur l'analyse complète de l'historique
+
+        Args:
+            current_params: Paramètres actuels
+
+        Returns:
+            Dict avec paramètres optimisés
+        """
+        print(f"Analyzing {len(self.history.iterations)} previous iterations...\n")
+
+        # Afficher le résumé de l'historique
+        if len(self.history.iterations) >= 2:
+            print("Historical performance:")
+            for i, it in enumerate(self.history.iterations[-5:], 1):  # 5 dernières
+                idx = len(self.history.iterations) - 5 + i
+                if idx > 0:
+                    print(f"  Iteration {idx}: ROI {it.get('roi', 0):+.2f}% | "
+                          f"Score {it.get('score', 0):.1f}/100")
+            print()
+
+        # Utiliser l'optimisation basée sur l'historique
+        optimization_result = self.history.suggest_optimal_parameters(current_params)
+
+        suggested_params = optimization_result['parameters']
+        notes = optimization_result['notes']
+        best_historical_roi = optimization_result['best_historical_roi']
+
+        print(f"Best historical ROI: {best_historical_roi:+.2f}%")
+        print(f"Current iteration ROI: {self.analysis_report['roi_analysis']['roi']:+.2f}%")
+        print()
+
+        # Afficher les insights sur les paramètres
+        insights = self.history.get_parameter_insights()
+        high_correlation_params = [
+            (name, data['correlation'])
+            for name, data in insights.items()
+            if abs(data.get('correlation', 0)) > 0.4
+        ]
+
+        if high_correlation_params:
+            print("Parameters with strong correlation to ROI:")
+            for param_name, correlation in sorted(high_correlation_params,
+                                                  key=lambda x: abs(x[1]),
+                                                  reverse=True)[:5]:
+                direction = "positive" if correlation > 0 else "negative"
+                print(f"  {param_name}: {correlation:+.2f} ({direction})")
+            print()
+
+        print("Recommended parameter adjustments:")
+        if notes:
+            for i, note in enumerate(notes, 1):
+                print(f"{i}. {note}")
+        else:
+            print("1. Maintaining current parameters (performing well)")
+
+        # Ajouter des suggestions contextuelles basées sur l'analyse actuelle
+        roi = self.analysis_report['roi_analysis']['roi']
+        win_rate = self.analysis_report['trade_analysis']['win_rate']
+
+        additional_suggestions = []
+
+        # Comparer avec le meilleur historique
+        if roi < best_historical_roi * 0.8:
+            additional_suggestions.append(
+                f"Current ROI is {((roi/best_historical_roi - 1) * 100):.1f}% "
+                f"below best historical. Moving toward best parameters."
+            )
+
+        # Win rate analysis
+        if win_rate < 45:
+            suggested_params['stop_loss'] = max(0.07, suggested_params.get('stop_loss', 0.10) * 0.9)
+            suggested_params['take_profit'] = min(0.30, suggested_params.get('take_profit', 0.20) * 1.1)
+            additional_suggestions.append(
+                f"Adjusting stop-loss/take-profit for better win rate "
+                f"(SL: {suggested_params['stop_loss']:.1%}, TP: {suggested_params['take_profit']:.1%})"
+            )
+
+        if additional_suggestions:
+            print("\nAdditional context-based adjustments:")
+            for i, suggestion in enumerate(additional_suggestions, len(notes) + 1):
+                print(f"{i}. {suggestion}")
+
+        print(f"\n{'='*60}\n")
+
+        return suggested_params
+
+    def _suggest_without_history(self, current_params: Dict) -> Dict:
+        """
+        Suggère des paramètres sans historique (première itération ou historique vide)
+
+        Args:
+            current_params: Paramètres actuels
+
+        Returns:
+            Dict avec paramètres suggérés
+        """
+        print("First iteration - using rule-based optimization\n")
+
         suggested_params = current_params.copy()
 
         roi = self.analysis_report['roi_analysis']['roi']

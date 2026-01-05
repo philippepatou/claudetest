@@ -9,9 +9,10 @@ import os
 from backtester import Backtester
 from autocritique import AutoCritique
 from data_fetcher import CryptoDataFetcher
+from iteration_history import IterationHistory
 
 
-def run_iteration(iteration_num: int, strategy_params: dict, args):
+def run_iteration(iteration_num: int, strategy_params: dict, args, history: IterationHistory):
     """
     Exécute une itération complète de trading avec autocritique
 
@@ -53,8 +54,8 @@ def run_iteration(iteration_num: int, strategy_params: dict, args):
         args.end_date
     )
 
-    # Autocritique
-    critique = AutoCritique(backtester.agent, backtester.all_data)
+    # Autocritique avec historique
+    critique = AutoCritique(backtester.agent, backtester.all_data, history=history)
     critique.analyze_performance(final_prices)
 
     # Sauvegarder le rapport
@@ -83,9 +84,14 @@ def run_iteration(iteration_num: int, strategy_params: dict, args):
         'iteration': iteration_num,
         'roi': critique.analysis_report['roi_analysis']['roi'],
         'score': critique.analysis_report['overall_score'],
+        'win_rate': critique.analysis_report['trade_analysis']['win_rate'],
+        'num_trades': critique.analysis_report['trade_analysis']['num_trades'],
         'parameters': strategy_params,
         'suggested_parameters': suggested_params
     }
+
+    # Ajouter l'itération à l'historique
+    history.add_iteration(iteration_results)
 
     return iteration_results
 
@@ -154,6 +160,12 @@ def main():
         help='Utiliser des données synthétiques au lieu de l\'API CoinGecko'
     )
 
+    parser.add_argument(
+        '--reset-history',
+        action='store_true',
+        help='Réinitialiser l\'historique et repartir de zéro'
+    )
+
     args = parser.parse_args()
 
     if args.fast:
@@ -167,6 +179,18 @@ def main():
     print(f"Iterations: {args.iterations}")
     print(f"Delay per day: {args.delay}s")
     print("=" * 60)
+
+    # Charger ou créer l'historique
+    history = IterationHistory(history_file='iteration_history.json')
+
+    # Réinitialiser l'historique si demandé
+    if args.reset_history:
+        print("\nResetting iteration history...\n")
+        history.clear_history()
+
+    # Afficher le résumé de l'historique si disponible
+    if len(history.iterations) > 0:
+        history.print_summary()
 
     # Paramètres initiaux de la stratégie
     strategy_params = {
@@ -186,11 +210,18 @@ def main():
         'take_profit': 0.20,
     }
 
+    # Si on a un historique, utiliser les meilleurs paramètres connus
+    if len(history.iterations) > 0 and not args.reset_history:
+        print("Using optimized parameters based on historical data...")
+        optimization = history.suggest_optimal_parameters(strategy_params)
+        strategy_params = optimization['parameters']
+        print(f"Starting from parameters optimized over {len(history.iterations)} iterations\n")
+
     all_iterations_results = []
 
     # Exécuter les itérations
     for iteration in range(1, args.iterations + 1):
-        result = run_iteration(iteration, strategy_params, args)
+        result = run_iteration(iteration, strategy_params, args, history)
 
         if result:
             all_iterations_results.append(result)
@@ -215,12 +246,23 @@ def main():
         for result in all_iterations_results:
             print(f"Iteration {result['iteration']}: "
                   f"ROI={result['roi']:+.2f}% | "
-                  f"Score={result['score']:.1f}/100")
+                  f"Score={result['score']:.1f}/100 | "
+                  f"Win Rate={result.get('win_rate', 0):.1f}%")
+
+        # Amélioration au fil du temps
+        first_roi = all_iterations_results[0]['roi']
+        last_roi = all_iterations_results[-1]['roi']
+        improvement = last_roi - first_roi
+        print(f"\nImprovement: {improvement:+.2f}% (from {first_roi:+.2f}% to {last_roi:+.2f}%)")
 
         # Meilleure itération
         best_iteration = max(all_iterations_results, key=lambda x: x['roi'])
-        print(f"\nBest Performance: Iteration {best_iteration['iteration']} "
+        print(f"Best Performance: Iteration {best_iteration['iteration']} "
               f"with ROI of {best_iteration['roi']:+.2f}%")
+
+        # Moyenne
+        avg_roi = sum(r['roi'] for r in all_iterations_results) / len(all_iterations_results)
+        print(f"Average ROI: {avg_roi:+.2f}%")
 
         # Sauvegarder le résumé
         if args.save_reports:
@@ -228,6 +270,12 @@ def main():
             with open(summary_path, 'w') as f:
                 json.dump(all_iterations_results, f, indent=2, default=str)
             print(f"\nFull summary saved to {summary_path}")
+
+    # Afficher le résumé complet de l'historique
+    print(f"\n{'#'*60}")
+    print("COMPLETE HISTORY (All Time)")
+    print(f"{'#'*60}")
+    history.print_summary()
 
     print(f"\n{'='*60}")
     print("TRADING AGENT COMPLETED")

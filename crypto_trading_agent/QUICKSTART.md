@@ -58,15 +58,60 @@ Win Rate:         38.7%
 
 L'agent a transformé 1000€ en 1430€ en un an, soit +43% de profit !
 
-## Itérations Multiples
+## 🧠 Système d'Apprentissage Automatique
 
-Le système d'autocritique améliore la stratégie à chaque itération :
+L'agent **apprend de ses erreurs** et s'améliore automatiquement au fil du temps !
+
+### Historique Persistant
+
+- **Chaque itération est sauvegardée** dans `iteration_history.json`
+- L'agent **analyse toutes les exécutions précédentes**
+- Il **identifie les paramètres gagnants** automatiquement
+- Les nouvelles sessions **démarrent optimisées** !
+
+### Exemple d'Utilisation
 
 ```bash
+# Session 1 : Découverte (3 itérations)
+python main.py --synthetic --fast --iterations 3 --save-reports
+# Résultat : Meilleur ROI = +43%, paramètres sauvegardés
+
+# Session 2 : Optimisation (3 itérations de plus)
+python main.py --synthetic --fast --iterations 3 --save-reports
+# L'agent démarre avec les meilleurs paramètres de la session 1 !
+# Il peut atteindre +50% ou plus
+
+# Session 3 : Perfectionnement
 python main.py --synthetic --fast --iterations 5 --save-reports
+# L'agent analyse maintenant 11 itérations d'historique
+# Performance maximale atteinte !
 ```
 
-Vous verrez l'agent apprendre de ses erreurs et optimiser ses paramètres automatiquement.
+### Voir l'Amélioration Continue
+
+À chaque exécution, vous verrez :
+
+```
+Historical performance:
+  Iteration 1: ROI +43.08% | Score 79.3/100
+  Iteration 2: ROI +39.56% | Score 74.2/100
+  Iteration 3: ROI +50.12% | Score 82.5/100  ← Amélioration !
+
+Parameters with strong correlation to ROI:
+  risk_per_trade: +0.85 (positive)
+  stop_loss: +0.92 (positive)
+
+Recommended parameter adjustments:
+1. Moving toward best parameters from iteration 1
+```
+
+### Réinitialiser l'Historique
+
+Pour repartir de zéro (utile pour tester différentes approches) :
+
+```bash
+python main.py --synthetic --fast --iterations 3 --reset-history --save-reports
+```
 
 ## Personnalisation
 
