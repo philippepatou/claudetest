@@ -140,6 +140,11 @@ def run_simulation(config):
         simulation_state['total_iterations'] = iterations
         simulation_state['logs'].append(f"Starting simulation with {iterations} iterations")
 
+        # Suivre la meilleure itération
+        best_iteration = None
+        best_roi = float('-inf')
+        all_iterations = []
+
         for iteration in range(1, iterations + 1):
             if not simulation_state['running']:
                 break
@@ -222,6 +227,12 @@ def run_simulation(config):
 
             history.add_iteration(iteration_results)
 
+            # Suivre les itérations et la meilleure
+            all_iterations.append(iteration_results)
+            if iteration_results['roi'] > best_roi:
+                best_roi = iteration_results['roi']
+                best_iteration = iteration_results.copy()
+
             simulation_state['results'] = iteration_results
             simulation_state['logs'].append(
                 f"Iteration {iteration} completed: ROI {iteration_results['roi']:+.2f}%"
@@ -242,6 +253,38 @@ def run_simulation(config):
         simulation_state['running'] = False
         simulation_state['progress'] = 100
         simulation_state['logs'].append("Simulation completed!")
+
+        # Afficher le résumé de la meilleure itération
+        if best_iteration:
+            simulation_state['logs'].append("")
+            simulation_state['logs'].append("=" * 60)
+            simulation_state['logs'].append("🏆 MEILLEURE ITÉRATION")
+            simulation_state['logs'].append("=" * 60)
+            simulation_state['logs'].append(f"Itération: {best_iteration['iteration']}/{iterations}")
+            simulation_state['logs'].append(f"ROI: {best_iteration['roi']:+.2f}%")
+            simulation_state['logs'].append(f"Score: {best_iteration['score']:.2f}/100")
+            simulation_state['logs'].append(f"Taux de réussite: {best_iteration['win_rate']:.1f}%")
+            simulation_state['logs'].append(f"Nombre de trades: {best_iteration['num_trades']}")
+            simulation_state['logs'].append(f"Valeur finale: {best_iteration['final_value']:.2f}€")
+            simulation_state['logs'].append(f"Profit/Perte: {best_iteration['profit_loss']:+.2f}€")
+            simulation_state['logs'].append("")
+            simulation_state['logs'].append("📊 PARAMÈTRES OPTIMAUX:")
+            params = best_iteration['parameters']
+            simulation_state['logs'].append(f"  • RSI Period: {params.get('rsi_period', 'N/A')}")
+            simulation_state['logs'].append(f"  • RSI Oversold: {params.get('rsi_oversold', 'N/A')}")
+            simulation_state['logs'].append(f"  • RSI Overbought: {params.get('rsi_overbought', 'N/A')}")
+            simulation_state['logs'].append(f"  • EMA Short: {params.get('ema_short', 'N/A')}")
+            simulation_state['logs'].append(f"  • EMA Long: {params.get('ema_long', 'N/A')}")
+            simulation_state['logs'].append(f"  • Risk per Trade: {params.get('risk_per_trade', 'N/A'):.2%}")
+            simulation_state['logs'].append(f"  • Max Allocation: {params.get('max_allocation_per_coin', 'N/A'):.2%}")
+            simulation_state['logs'].append(f"  • Stop Loss: {params.get('stop_loss', 'N/A'):.2%}")
+            simulation_state['logs'].append(f"  • Take Profit: {params.get('take_profit', 'N/A'):.2%}")
+            simulation_state['logs'].append(f"  • Twitter Weight: {params.get('twitter_weight', 'N/A'):.2%}")
+            simulation_state['logs'].append("=" * 60)
+
+            # Ajouter le résumé aux résultats
+            simulation_state['results']['best_iteration'] = best_iteration
+            simulation_state['results']['all_iterations'] = all_iterations
 
     except Exception as e:
         simulation_state['running'] = False

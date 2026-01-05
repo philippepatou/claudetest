@@ -215,6 +215,49 @@ function displayResults(results) {
     } else {
         roiCard.classList.remove('success');
     }
+
+    // Afficher les meilleurs paramètres si disponibles
+    if (results.best_iteration) {
+        displayBestParameters(results.best_iteration);
+    }
+}
+
+// Afficher les meilleurs paramètres
+function displayBestParameters(bestIteration) {
+    const section = document.getElementById('best-params-section');
+    section.style.display = 'block';
+
+    // Mettre à jour l'en-tête
+    document.getElementById('best-iteration-num').textContent =
+        `${bestIteration.iteration}`;
+    document.getElementById('best-iteration-roi').textContent =
+        `${bestIteration.roi >= 0 ? '+' : ''}${bestIteration.roi.toFixed(2)}%`;
+    document.getElementById('best-iteration-score').textContent =
+        `${bestIteration.score.toFixed(1)}/100`;
+
+    // Construire la grille de paramètres
+    const params = bestIteration.parameters;
+    const paramsGrid = document.getElementById('best-params-grid');
+
+    const paramsList = [
+        { name: 'RSI Period', value: params.rsi_period },
+        { name: 'RSI Oversold', value: params.rsi_oversold },
+        { name: 'RSI Overbought', value: params.rsi_overbought },
+        { name: 'EMA Short', value: params.ema_short },
+        { name: 'EMA Long', value: params.ema_long },
+        { name: 'Risk per Trade', value: `${(params.risk_per_trade * 100).toFixed(1)}%` },
+        { name: 'Max Allocation', value: `${(params.max_allocation_per_coin * 100).toFixed(1)}%` },
+        { name: 'Stop Loss', value: `${(params.stop_loss * 100).toFixed(1)}%` },
+        { name: 'Take Profit', value: `${(params.take_profit * 100).toFixed(1)}%` },
+        { name: 'Twitter Weight', value: `${(params.twitter_weight * 100).toFixed(1)}%` }
+    ];
+
+    paramsGrid.innerHTML = paramsList.map(param => `
+        <div class="param-item">
+            <span class="param-name">${param.name}</span>
+            <span class="param-value">${param.value}</span>
+        </div>
+    `).join('');
 }
 
 // Charger l'historique

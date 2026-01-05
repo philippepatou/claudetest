@@ -415,6 +415,69 @@ body {
     font-weight: 600;
 }
 
+/* Best Parameters Section */
+.best-iteration-header {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.best-stat {
+    text-align: center;
+}
+
+.best-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.best-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.best-value.highlight {
+    color: #ffd700;
+    font-size: 1.8rem;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.params-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.param-item {
+    background: var(--bg-dark);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.param-name {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.param-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
 /* Footer */
 .footer {
     text-align: center;
@@ -463,5 +526,9 @@ body {
 
     .history-summary {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .params-grid {
+        grid-template-columns: 1fr;
     }
 }
