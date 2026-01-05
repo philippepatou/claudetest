@@ -232,6 +232,13 @@ def run_simulation(config):
                 suggested_params = critique.suggest_improvements()
                 strategy_params = suggested_params
 
+                # Convertir les paramètres qui doivent être des entiers
+                int_params = ['rsi_period', 'ema_short', 'ema_long', 'macd_signal',
+                              'bb_period', 'momentum_period', 'min_history']
+                for param in int_params:
+                    if param in strategy_params:
+                        strategy_params[param] = int(round(strategy_params[param]))
+
         simulation_state['running'] = False
         simulation_state['progress'] = 100
         simulation_state['logs'].append("Simulation completed!")
