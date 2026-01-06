@@ -2,6 +2,11 @@
 const API_URL = 'http://localhost:5000/api';
 let pollInterval = null;
 
+// Variables globales pour l'autocritique
+let currentAutocritiqueData = null;
+let portfolioChart = null;
+let portfolioDataPoints = [];
+
 // Chargement initial
 document.addEventListener('DOMContentLoaded', () => {
     loadHistory();
@@ -24,6 +29,9 @@ async function startSimulation() {
 
     // Réinitialiser les logs
     document.getElementById('logs').innerHTML = '';
+
+    // Initialiser le graphique du portfolio
+    initPortfolioChart();
 
     try {
         const response = await fetch(`${API_URL}/simulation/start`, {
@@ -193,10 +201,16 @@ function updateProgress(status) {
         `${status.current_day} / ${status.total_days}`;
 
     if (status.results) {
+        const finalValue = status.results.final_value || 0;
         document.getElementById('portfolio-value').textContent =
-            `${status.results.final_value?.toFixed(2) || '-'}€`;
+            `${finalValue.toFixed(2)}€`;
         document.getElementById('current-roi').textContent =
             `${status.results.roi >= 0 ? '+' : ''}${status.results.roi?.toFixed(2) || '-'}%`;
+
+        // Mettre à jour le graphique du portfolio
+        if (status.current_day) {
+            updatePortfolioChart(status.current_day, finalValue);
+        }
     }
 }
 
@@ -534,6 +548,9 @@ async function loadAutocritique() {
         const data = await response.json();
         console.log('✓ Autocritique data loaded:', data);
 
+        // Stocker les données pour les boutons d'ajustement
+        currentAutocritiqueData = data;
+
         // Afficher la section
         document.getElementById('autocritique-section').style.display = 'block';
         console.log('✓ Autocritique section displayed');
@@ -787,4 +804,254 @@ function applySuggestedParameters() {
     document.querySelector('.config-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     alert('✅ Paramètres suggérés appliqués avec succès !\n\nVous pouvez maintenant lancer une nouvelle simulation avec ces paramètres optimisés.');
+}
+
+// ====== NOUVEAU: Graphique Portfolio ======
+
+// Initialiser le graphique du portfolio
+function initPortfolioChart() {
+    const ctx = document.getElementById('portfolio-chart');
+    if (!ctx) return;
+
+    // Détruire l'ancien graphique s'il existe
+    if (portfolioChart) {
+        portfolioChart.destroy();
+    }
+
+    // Réinitialiser les données
+    portfolioDataPoints = [];
+
+    portfolioChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Valeur du Portfolio (€)',
+                data: [],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        color: '#f8fafc'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        color: '#94a3b8',
+                        callback: function(value) {
+                            return value.toFixed(2) + '€';
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(148, 163, 184, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#94a3b8'
+                    },
+                    grid: {
+                        color: 'rgba(148, 163, 184, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Mettre à jour le graphique du portfolio
+function updatePortfolioChart(day, value) {
+    if (!portfolioChart) {
+        initPortfolioChart();
+    }
+
+    if (portfolioChart) {
+        portfolioChart.data.labels.push(`Jour ${day}`);
+        portfolioChart.data.datasets[0].data.push(value);
+        portfolioChart.update('none'); // 'none' pour animation plus rapide
+    }
+}
+
+// ====== NOUVEAU: Fonctions d'Ajustement des Paramètres ======
+
+// Ajuster le comportement des transactions (Stop-Loss / Take-Profit)
+function adjustTransactionBehavior() {
+    if (!currentAutocritiqueData || !currentAutocritiqueData.transaction_analysis) {
+        alert('Aucune donnée d\'analyse disponible');
+        return;
+    }
+
+    const timing = currentAutocritiqueData.transaction_analysis.timing_analysis || {};
+    const total_exits = timing.early_exits + timing.late_exits + timing.good_exits;
+
+    if (total_exits === 0) {
+        alert('Pas assez de données pour ajuster les paramètres');
+        return;
+    }
+
+    const early_pct = (timing.early_exits / total_exits) * 100;
+    const late_pct = (timing.late_exits / total_exits) * 100;
+
+    // Récupérer les valeurs actuelles
+    let currentStopLoss = parseFloat(document.getElementById('stop-loss').value) / 100;
+    let currentTakeProfit = parseFloat(document.getElementById('take-profit').value) / 100;
+
+    let adjustments = [];
+
+    // Ajuster en fonction de l'analyse
+    if (early_pct > 40) {
+        // Trop de sorties précoces → augmenter le take profit
+        currentTakeProfit = Math.min(0.50, currentTakeProfit * 1.25);
+        adjustments.push(`↗️ Take Profit augmenté à ${(currentTakeProfit * 100).toFixed(0)}% (sorties trop précoces)`);
+    }
+
+    if (late_pct > 40) {
+        // Trop de sorties tardives → réduire le stop loss
+        currentStopLoss = Math.max(0.05, currentStopLoss * 0.80);
+        adjustments.push(`↘️ Stop Loss réduit à ${(currentStopLoss * 100).toFixed(0)}% (sorties trop tardives)`);
+    }
+
+    if (adjustments.length === 0) {
+        alert('✅ Le timing actuel est optimal !\n\nAucun ajustement nécessaire.');
+        return;
+    }
+
+    // Appliquer les ajustements
+    document.getElementById('stop-loss').value = (currentStopLoss * 100).toFixed(0);
+    document.getElementById('take-profit').value = (currentTakeProfit * 100).toFixed(0);
+
+    // Effet visuel
+    document.getElementById('stop-loss').parentElement.style.animation = 'fadeIn 0.5s';
+    document.getElementById('take-profit').parentElement.style.animation = 'fadeIn 0.5s';
+    setTimeout(() => {
+        document.getElementById('stop-loss').parentElement.style.animation = '';
+        document.getElementById('take-profit').parentElement.style.animation = '';
+    }, 500);
+
+    alert('✅ Paramètres ajustés !\n\n' + adjustments.join('\n'));
+}
+
+// Ajuster le comportement d'anticipation du marché
+function adjustAnticipationBehavior() {
+    if (!currentAutocritiqueData || !currentAutocritiqueData.market_anticipation_analysis) {
+        alert('Aucune donnée d\'anticipation disponible');
+        return;
+    }
+
+    const analysis = currentAutocritiqueData.market_anticipation_analysis;
+    const detectionRate = analysis.early_detection_rate || 0;
+
+    let adjustments = [];
+    let currentRsiOversold = parseInt(document.getElementById('rsi-oversold').value);
+    let currentRsiOverbought = parseInt(document.getElementById('rsi-overbought').value);
+
+    if (detectionRate < 30) {
+        // Faible taux de détection → être plus agressif
+        currentRsiOversold = Math.min(35, currentRsiOversold + 3);
+        currentRsiOverbought = Math.max(65, currentRsiOverbought - 3);
+        adjustments.push('🎯 Seuils RSI élargis pour plus de signaux');
+        adjustments.push(`RSI Oversold: ${currentRsiOversold}`);
+        adjustments.push(`RSI Overbought: ${currentRsiOverbought}`);
+    } else if (detectionRate > 70) {
+        // Très bon taux → rester conservateur
+        alert('✅ Excellente anticipation du marché !\n\nTaux de détection: ' + detectionRate.toFixed(1) + '%\n\nAucun ajustement nécessaire.');
+        return;
+    } else {
+        // Taux moyen → ajustements légers
+        currentRsiOversold = Math.min(35, currentRsiOversold + 2);
+        currentRsiOverbought = Math.max(65, currentRsiOverbought - 2);
+        adjustments.push('⚖️ Ajustements légers pour améliorer la détection');
+        adjustments.push(`RSI Oversold: ${currentRsiOversold}`);
+        adjustments.push(`RSI Overbought: ${currentRsiOverbought}`);
+    }
+
+    // Appliquer
+    document.getElementById('rsi-oversold').value = currentRsiOversold;
+    document.getElementById('rsi-overbought').value = currentRsiOverbought;
+
+    // Effet visuel
+    document.getElementById('rsi-oversold').parentElement.style.animation = 'fadeIn 0.5s';
+    document.getElementById('rsi-overbought').parentElement.style.animation = 'fadeIn 0.5s';
+    setTimeout(() => {
+        document.getElementById('rsi-oversold').parentElement.style.animation = '';
+        document.getElementById('rsi-overbought').parentElement.style.animation = '';
+    }, 500);
+
+    alert('✅ Sensibilité ajustée !\n\n' + adjustments.join('\n'));
+}
+
+// Ajuster les poids des influenceurs
+function adjustInfluencerWeights() {
+    if (!currentAutocritiqueData || !currentAutocritiqueData.influencer_impact_analysis) {
+        alert('Aucune donnée d\'influenceurs disponible');
+        return;
+    }
+
+    const analysis = currentAutocritiqueData.influencer_impact_analysis;
+    const beneficial = analysis.beneficial_influencers || [];
+    const harmful = analysis.harmful_influencers || [];
+
+    if (beneficial.length === 0 && harmful.length === 0) {
+        alert('Pas assez de données sur les influenceurs');
+        return;
+    }
+
+    let message = '📊 Analyse des Influenceurs Twitter\n\n';
+
+    if (beneficial.length > 0) {
+        message += '✅ INFLUENCEURS BÉNÉFIQUES :\n';
+        beneficial.forEach(inf => {
+            message += `  • ${inf.influencer}: Win Rate ${inf.win_rate.toFixed(1)}%, PNL ${inf.avg_pnl >= 0 ? '+' : ''}${inf.avg_pnl.toFixed(2)}%\n`;
+        });
+        message += '\n';
+    }
+
+    if (harmful.length > 0) {
+        message += '⚠️ INFLUENCEURS NUISIBLES :\n';
+        harmful.forEach(inf => {
+            message += `  • ${inf.influencer}: Win Rate ${inf.win_rate.toFixed(1)}%, PNL ${inf.avg_pnl >= 0 ? '+' : ''}${inf.avg_pnl.toFixed(2)}%\n`;
+        });
+        message += '\n';
+    }
+
+    const totalInfluencers = analysis.total_influencers_tracked || 0;
+    const beneficialPct = beneficial.length > 0 ? (beneficial.length / totalInfluencers * 100) : 0;
+
+    let twitterWeight = parseFloat(document.getElementById('twitter-weight').value) / 100;
+
+    if (beneficialPct > 60) {
+        // Beaucoup d'influenceurs bénéfiques → augmenter le poids
+        twitterWeight = Math.min(0.50, twitterWeight * 1.2);
+        message += `\n✨ Poids Twitter augmenté à ${(twitterWeight * 100).toFixed(0)}%`;
+    } else if (beneficialPct < 30) {
+        // Peu d'influenceurs bénéfiques → réduire le poids
+        twitterWeight = Math.max(0.10, twitterWeight * 0.8);
+        message += `\n⚠️ Poids Twitter réduit à ${(twitterWeight * 100).toFixed(0)}%`;
+    } else {
+        message += `\n⚖️ Poids Twitter maintenu à ${(twitterWeight * 100).toFixed(0)}%`;
+    }
+
+    // Appliquer
+    document.getElementById('twitter-weight').value = (twitterWeight * 100).toFixed(0);
+
+    // Effet visuel
+    document.getElementById('twitter-weight').parentElement.style.animation = 'fadeIn 0.5s';
+    setTimeout(() => {
+        document.getElementById('twitter-weight').parentElement.style.animation = '';
+    }, 500);
+
+    alert(message);
 }

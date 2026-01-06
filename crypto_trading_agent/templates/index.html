@@ -6,6 +6,7 @@
     <title>🤖 Agent de Trading Crypto - Interface de Contrôle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -185,6 +186,12 @@
                 </div>
             </div>
 
+            <!-- NOUVEAU: Graphique d'évolution du portfolio -->
+            <div style="margin-top: 2rem;">
+                <h3>📈 Évolution du Portfolio</h3>
+                <canvas id="portfolio-chart" style="max-height: 300px;"></canvas>
+            </div>
+
             <div class="logs-container">
                 <h3>📝 Logs de Simulation</h3>
                 <div class="logs" id="logs"></div>
@@ -265,6 +272,10 @@
                     <ul class="recommendations-list" id="timing-recommendations">
                         <!-- Recommendations will be inserted here -->
                     </ul>
+                    <!-- NOUVEAU: Bouton pour ajuster le comportement -->
+                    <button class="btn btn-primary btn-sm" onclick="adjustTransactionBehavior()" style="margin-top: 1rem; width: 100%;">
+                        🎯 Ajuster Stop-Loss / Take-Profit
+                    </button>
                 </div>
 
                 <!-- Market Anticipation Card -->
@@ -291,6 +302,10 @@
                     <div id="anticipation-details" style="margin-top: 1rem; max-height: 200px; overflow-y: auto;">
                         <!-- Anticipation details will be inserted here -->
                     </div>
+                    <!-- NOUVEAU: Bouton pour ajuster le comportement -->
+                    <button class="btn btn-primary btn-sm" onclick="adjustAnticipationBehavior()" style="margin-top: 1rem; width: 100%;">
+                        🎯 Ajuster Sensibilité Détection
+                    </button>
                 </div>
 
                 <!-- Influencer Impact Card -->
@@ -313,6 +328,10 @@
                     <ul class="recommendations-list" id="influencer-recommendations">
                         <!-- Influencer recommendations will be inserted here -->
                     </ul>
+                    <!-- NOUVEAU: Bouton pour ajuster les poids -->
+                    <button class="btn btn-primary btn-sm" onclick="adjustInfluencerWeights()" style="margin-top: 1rem; width: 100%;">
+                        🎯 Ajuster Poids des Influenceurs
+                    </button>
                 </div>
             </div>
 
