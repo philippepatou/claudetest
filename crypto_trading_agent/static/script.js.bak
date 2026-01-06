@@ -524,13 +524,13 @@ async function applyBestHistoricalParameters() {
     try {
         const response = await fetch(`${API_URL}/history/best`);
         if (!response.ok) {
-            showToast('Impossible de charger les meilleurs paramètres historiques', 'error');
+            alert('Impossible de charger les meilleurs paramètres historiques');
             return;
         }
 
         const data = await response.json();
         if (!data.parameters) {
-            showToast('Aucun paramètre historique disponible', 'warning');
+            alert('Aucun paramètre historique disponible');
             return;
         }
 
@@ -546,10 +546,10 @@ async function applyBestHistoricalParameters() {
         // Scroll vers la section de configuration
         document.querySelector('.config-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        showToast(`✅ Meilleurs paramètres historiques appliqués ! Itération: ${data.iteration}, ROI: ${data.roi.toFixed(2)}%, Score: ${data.score.toFixed(1)}/100`, 'success', 6000);
+        alert(`✅ Meilleurs paramètres historiques appliqués !\n\nItération: ${data.iteration}\nROI: ${data.roi.toFixed(2)}%\nScore: ${data.score.toFixed(1)}/100`);
     } catch (error) {
         console.error('Error applying best historical parameters:', error);
-        showToast('Erreur lors de l\'application des paramètres', 'error');
+        alert('Erreur lors de l\'application des paramètres');
     }
 }
 
@@ -629,7 +629,7 @@ function displayTwitterRankings(rankings, suggestedWeights) {
 // Appliquer les poids Twitter suggérés
 function applyTwitterWeights(weights) {
     if (!weights || Object.keys(weights).length === 0) {
-        showToast('Aucun poids suggéré disponible', 'warning');
+        alert('Aucun poids suggéré disponible');
         return;
     }
 
@@ -642,7 +642,7 @@ function applyTwitterWeights(weights) {
         twitterWeightField.value = (avgWeight * 100).toFixed(1);
     }
 
-    showToast(`✅ Poids Twitter appliqué: ${(avgWeight * 100).toFixed(1)}% - Fiabilité moyenne des influenceurs bénéfiques`, 'success', 5000);
+    alert(`✅ Poids Twitter appliqué: ${(avgWeight * 100).toFixed(1)}%\n\nCe poids reflète la fiabilité moyenne des influenceurs bénéfiques.`);
 }
 
 // ====== NOUVEAU: Module d'Autocritique ======
@@ -900,7 +900,7 @@ function displaySuggestedParameters(params) {
 // Appliquer les paramètres suggérés aux champs du formulaire
 function applySuggestedParameters() {
     if (!currentSuggestedParameters) {
-        showToast('Aucun paramètre suggéré disponible', 'warning');
+        alert('Aucun paramètre suggéré disponible');
         return;
     }
 
@@ -919,7 +919,7 @@ function applySuggestedParameters() {
     // Scroll vers la section de configuration
     document.querySelector('.config-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    showToast('✅ Paramètres suggérés appliqués avec succès ! Vous pouvez maintenant lancer une nouvelle simulation.', 'success', 5000);
+    alert('✅ Paramètres suggérés appliqués avec succès !\n\nVous pouvez maintenant lancer une nouvelle simulation avec ces paramètres optimisés.');
 }
 
 // ====== NOUVEAU: Graphique Portfolio ======
@@ -1062,7 +1062,7 @@ function adjustTransactionBehavior() {
     const total_exits = timing.early_exits + timing.late_exits + timing.good_exits;
 
     if (total_exits === 0) {
-        showToast('Pas assez de données pour ajuster les paramètres', 'warning');
+        alert('Pas assez de données pour ajuster les paramètres');
         return;
     }
 
@@ -1089,7 +1089,7 @@ function adjustTransactionBehavior() {
     }
 
     if (adjustments.length === 0) {
-        showToast('✅ Le timing actuel est optimal ! Aucun ajustement nécessaire.', 'success', 4000);
+        alert('✅ Le timing actuel est optimal !\n\nAucun ajustement nécessaire.');
         return;
     }
 
@@ -1105,7 +1105,7 @@ function adjustTransactionBehavior() {
         document.getElementById('take-profit').parentElement.style.animation = '';
     }, 500);
 
-    showToast('✅ Paramètres ajustés ! ' + adjustments.join(', '), 'success', 6000);
+    alert('✅ Paramètres ajustés !\n\n' + adjustments.join('\n'));
 }
 
 // Ajuster le comportement d'anticipation du marché
@@ -1131,7 +1131,7 @@ function adjustAnticipationBehavior() {
         adjustments.push(`RSI Overbought: ${currentRsiOverbought}`);
     } else if (detectionRate > 70) {
         // Très bon taux → rester conservateur
-        showToast('✅ Excellente anticipation du marché ! Taux de détection: ' + detectionRate.toFixed(1) + '%', 'success', 5000);
+        alert('✅ Excellente anticipation du marché !\n\nTaux de détection: ' + detectionRate.toFixed(1) + '%\n\nAucun ajustement nécessaire.');
         return;
     } else {
         // Taux moyen → ajustements légers
@@ -1154,7 +1154,7 @@ function adjustAnticipationBehavior() {
         document.getElementById('rsi-overbought').parentElement.style.animation = '';
     }, 500);
 
-    showToast('✅ Sensibilité ajustée ! ' + adjustments.join(', '), 'success', 6000);
+    alert('✅ Sensibilité ajustée !\n\n' + adjustments.join('\n'));
 }
 
 // Ajuster les poids des influenceurs
@@ -1169,7 +1169,7 @@ function adjustInfluencerWeights() {
     const harmful = analysis.harmful_influencers || [];
 
     if (beneficial.length === 0 && harmful.length === 0) {
-        showToast('Pas assez de données sur les influenceurs', 'warning');
+        alert('Pas assez de données sur les influenceurs');
         return;
     }
 
@@ -1217,7 +1217,7 @@ function adjustInfluencerWeights() {
         document.getElementById('twitter-weight').parentElement.style.animation = '';
     }, 500);
 
-    showToast(message, 'info', 8000);
+    alert(message);
 }
 
 // ========================================
