@@ -1221,6 +1221,35 @@ function adjustInfluencerWeights() {
 }
 
 // ========================================
+// ACCORDION SYSTEM
+// ========================================
+
+/**
+ * Toggle accordion item open/closed
+ * @param {HTMLElement} header - The accordion header button that was clicked
+ */
+function toggleAccordion(header) {
+    const accordionItem = header.parentElement;
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.accordion-icon');
+
+    // Check if currently open
+    const isOpen = content.style.display === 'block';
+
+    if (isOpen) {
+        // Close it
+        content.style.display = 'none';
+        icon.textContent = '▼';
+        accordionItem.classList.remove('active');
+    } else {
+        // Open it
+        content.style.display = 'block';
+        icon.textContent = '▲';
+        accordionItem.classList.add('active');
+    }
+}
+
+// ========================================
 // TOAST NOTIFICATION SYSTEM
 // ========================================
 
