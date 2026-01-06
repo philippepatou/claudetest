@@ -122,12 +122,7 @@
 
             <!-- Best Parameters Section (initially hidden) -->
             <div id="best-params-inline" style="display: none; margin-top: 30px;">
-                <div class="best-params-header">
-                    <h3>🏆 Meilleurs Paramètres Trouvés</h3>
-                    <button class="btn btn-success btn-sm" onclick="applyBestParameters()">
-                        ✨ Appliquer Ces Paramètres
-                    </button>
-                </div>
+                <h3>🏆 Meilleurs Paramètres Trouvés</h3>
 
                 <div class="best-iteration-compact">
                     <span><strong>Itération:</strong> <span id="best-iter-num-inline">-</span></span>
@@ -146,6 +141,9 @@
                 </button>
                 <button id="stop-btn" class="btn btn-danger" onclick="stopSimulation()" disabled>
                     ⏹️ Arrêter
+                </button>
+                <button id="apply-best-params-btn" class="btn btn-success" onclick="applyBestHistoricalParameters()" style="display: none;">
+                    ✨ Appliquer Meilleurs Paramètres
                 </button>
                 <button class="btn btn-secondary" onclick="clearHistory()">
                     🗑️ Effacer l'Historique

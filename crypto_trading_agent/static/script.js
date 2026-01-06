@@ -8,6 +8,7 @@ let portfolioChart = null;
 let portfolioDataPoints = [];
 let lastIterationNumber = 0;
 let lastPortfolioHistoryLength = 0;
+let initialCapital = 1000; // Capital de départ pour le graphique
 
 // Chargement initial
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,6 +36,9 @@ async function startSimulation() {
     // Réinitialiser les variables de suivi
     lastIterationNumber = 0;
     lastPortfolioHistoryLength = 0;
+
+    // Stocker le capital initial pour le graphique
+    initialCapital = config.simulation_params.initial_balance;
 
     // Initialiser le graphique du portfolio
     initPortfolioChart();
@@ -299,6 +303,19 @@ function displayBestParameters(bestIteration) {
             <span class="param-value">${param.value}</span>
         </div>
     `).join('');
+
+    // Ajouter un bouton pour appliquer ces paramètres
+    // Vérifier si le bouton n'existe pas déjà
+    if (!document.getElementById('apply-best-params-detailed-btn')) {
+        const button = document.createElement('button');
+        button.id = 'apply-best-params-detailed-btn';
+        button.className = 'btn btn-success btn-sm';
+        button.style.marginTop = '1.5rem';
+        button.style.width = '100%';
+        button.textContent = '✨ Appliquer Ces Paramètres';
+        button.onclick = () => applyBestParameters();
+        section.appendChild(button);
+    }
 }
 
 // Charger l'historique
@@ -351,6 +368,12 @@ let currentBestParameters = null;
 function displayBestParametersInline(bestIteration) {
     const section = document.getElementById('best-params-inline');
     section.style.display = 'block';
+
+    // Afficher le bouton d'application des meilleurs paramètres
+    const applyButton = document.getElementById('apply-best-params-btn');
+    if (applyButton) {
+        applyButton.style.display = 'inline-block';
+    }
 
     // Stocker les paramètres pour l'application ultérieure
     currentBestParameters = bestIteration.parameters;
@@ -486,6 +509,40 @@ function applyBestParameters() {
     alert('✅ Paramètres optimaux appliqués avec succès !');
 }
 
+// Appliquer les meilleurs paramètres historiques (depuis tout l'historique)
+async function applyBestHistoricalParameters() {
+    try {
+        const response = await fetch(`${API_URL}/history/best`);
+        if (!response.ok) {
+            alert('Impossible de charger les meilleurs paramètres historiques');
+            return;
+        }
+
+        const data = await response.json();
+        if (!data.parameters) {
+            alert('Aucun paramètre historique disponible');
+            return;
+        }
+
+        updateAllParameters(data.parameters);
+
+        // Effet visuel de confirmation
+        const button = document.getElementById('apply-best-params-btn');
+        button.style.animation = 'pulse 0.5s';
+        setTimeout(() => {
+            button.style.animation = '';
+        }, 500);
+
+        // Scroll vers la section de configuration
+        document.querySelector('.config-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        alert(`✅ Meilleurs paramètres historiques appliqués !\n\nItération: ${data.iteration}\nROI: ${data.roi.toFixed(2)}%\nScore: ${data.score.toFixed(1)}/100`);
+    } catch (error) {
+        console.error('Error applying best historical parameters:', error);
+        alert('Erreur lors de l\'application des paramètres');
+    }
+}
+
 // Afficher le classement Twitter
 function displayTwitterRankings(rankings, suggestedWeights) {
     const section = document.getElementById('twitter-rankings-section');
@@ -543,7 +600,39 @@ function displayTwitterRankings(rankings, suggestedWeights) {
                 <span class="weight-value">${weight.toFixed(2)}</span>
             </div>
         `).join('');
+
+        // Ajouter un bouton pour appliquer les poids suggérés
+        // Vérifier si le bouton n'existe pas déjà
+        if (!document.getElementById('apply-twitter-weights-btn')) {
+            const button = document.createElement('button');
+            button.id = 'apply-twitter-weights-btn';
+            button.className = 'btn btn-primary btn-sm';
+            button.style.marginTop = '1rem';
+            button.style.width = '100%';
+            button.textContent = '🎯 Appliquer les Poids Suggérés';
+            button.onclick = () => applyTwitterWeights(suggestedWeights);
+            weightsSection.appendChild(button);
+        }
     }
+}
+
+// Appliquer les poids Twitter suggérés
+function applyTwitterWeights(weights) {
+    if (!weights || Object.keys(weights).length === 0) {
+        alert('Aucun poids suggéré disponible');
+        return;
+    }
+
+    // Calculer le poids moyen des influenceurs suggérés
+    const avgWeight = Object.values(weights).reduce((sum, w) => sum + w, 0) / Object.keys(weights).length;
+
+    // Mettre à jour le twitter_weight avec la moyenne
+    const twitterWeightField = document.getElementById('twitter-weight');
+    if (twitterWeightField) {
+        twitterWeightField.value = (avgWeight * 100).toFixed(1);
+    }
+
+    alert(`✅ Poids Twitter appliqué: ${(avgWeight * 100).toFixed(1)}%\n\nCe poids reflète la fiabilité moyenne des influenceurs bénéfiques.`);
 }
 
 // ====== NOUVEAU: Module d'Autocritique ======
@@ -842,15 +931,29 @@ function initPortfolioChart() {
         type: 'line',
         data: {
             labels: [],
-            datasets: [{
-                label: 'Valeur du Portfolio (€)',
-                data: [],
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4
-            }]
+            datasets: [
+                {
+                    label: 'Valeur du Portfolio (€)',
+                    data: [],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,  // Retirer les points
+                    pointHoverRadius: 4  // Afficher un point seulement au survol
+                },
+                {
+                    label: 'Capital Initial',
+                    data: [],
+                    borderColor: '#fbbf24',
+                    borderWidth: 2,
+                    borderDash: [5, 5],  // Ligne pointillée
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -866,6 +969,8 @@ function initPortfolioChart() {
             scales: {
                 y: {
                     beginAtZero: false,
+                    min: initialCapital - 300,  // Placeholder, sera mis à jour dynamiquement
+                    max: initialCapital + 300,  // Placeholder, sera mis à jour dynamiquement
                     ticks: {
                         color: '#94a3b8',
                         callback: function(value) {
@@ -873,7 +978,13 @@ function initPortfolioChart() {
                         }
                     },
                     grid: {
-                        color: 'rgba(148, 163, 184, 0.1)'
+                        color: function(context) {
+                            // Mettre en évidence la ligne du capital initial
+                            if (context.tick.value === initialCapital) {
+                                return 'rgba(251, 191, 36, 0.3)';
+                            }
+                            return 'rgba(148, 163, 184, 0.1)';
+                        }
                     }
                 },
                 x: {
@@ -896,8 +1007,34 @@ function updatePortfolioChart(day, value) {
     }
 
     if (portfolioChart) {
+        // Ajouter le point à la courbe du portfolio
         portfolioChart.data.labels.push(`Jour ${day}`);
         portfolioChart.data.datasets[0].data.push(value);
+
+        // Ajouter le point à la ligne du capital initial (valeur constante)
+        portfolioChart.data.datasets[1].data.push(initialCapital);
+
+        // Calculer l'échelle Y pour garder le capital initial au centre
+        const allValues = portfolioChart.data.datasets[0].data;
+        if (allValues.length > 0) {
+            const maxValue = Math.max(...allValues);
+            const minValue = Math.min(...allValues);
+
+            // Calculer l'écart maximum par rapport au capital initial
+            const maxDeviation = Math.max(
+                Math.abs(maxValue - initialCapital),
+                Math.abs(minValue - initialCapital)
+            );
+
+            // Ajouter une marge de 10% pour l'aération
+            const margin = maxDeviation * 0.1;
+            const totalRange = maxDeviation + margin;
+
+            // Mettre à jour l'échelle Y de façon symétrique autour du capital initial
+            portfolioChart.options.scales.y.min = initialCapital - totalRange;
+            portfolioChart.options.scales.y.max = initialCapital + totalRange;
+        }
+
         portfolioChart.update('none'); // 'none' pour animation plus rapide
     }
 }

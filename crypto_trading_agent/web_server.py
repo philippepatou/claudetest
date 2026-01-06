@@ -152,6 +152,91 @@ def get_latest_autocritique():
     return jsonify(simulation_state['last_autocritique'])
 
 
+def analyze_batch_performance(iterations: list, batch_id: str) -> dict:
+    """
+    Analyse les variations de performance entre itérations du même batch
+    pour comprendre pourquoi certaines itérations fonctionnent mieux que d'autres
+
+    Args:
+        iterations: Liste des résultats d'itérations du batch
+        batch_id: Identifiant du batch
+
+    Returns:
+        Dict avec l'analyse du batch
+    """
+    if not iterations:
+        return {}
+
+    rois = [it['roi'] for it in iterations]
+    scores = [it['score'] for it in iterations]
+    win_rates = [it['win_rate'] for it in iterations]
+
+    avg_roi = np.mean(rois)
+    roi_std = np.std(rois)
+    best_roi = max(rois)
+    worst_roi = min(rois)
+
+    # Identifier les itérations gagnantes vs perdantes
+    profitable = [it for it in iterations if it['roi'] > 0]
+    unprofitable = [it for it in iterations if it['roi'] <= 0]
+
+    insights = []
+
+    # Insight 1: Variabilité de performance
+    if roi_std > 10:
+        insights.append(f"Forte variabilité ({roi_std:.1f}%) - Les conditions de marché impactent fortement les résultats")
+    elif roi_std > 5:
+        insights.append(f"Variabilité modérée ({roi_std:.1f}%) - Stratégie partiellement adaptable")
+    else:
+        insights.append(f"Faible variabilité ({roi_std:.1f}%) - Stratégie stable et robuste ✓")
+
+    # Insight 2: Taux de succès
+    success_rate = (len(profitable) / len(iterations)) * 100
+    if success_rate >= 80:
+        insights.append(f"Excellent taux de succès: {success_rate:.0f}% des itérations profitables ✓")
+    elif success_rate >= 50:
+        insights.append(f"Taux de succès correct: {success_rate:.0f}% des itérations profitables")
+    else:
+        insights.append(f"Faible taux de succès: {success_rate:.0f}% des itérations profitables - Révision nécessaire ⚠")
+
+    # Insight 3: Cohérence ROI vs Score
+    roi_score_correlation = np.corrcoef(rois, scores)[0, 1] if len(rois) > 1 else 0
+    if roi_score_correlation > 0.8:
+        insights.append("ROI et Score bien corrélés - Métrique de qualité fiable")
+    elif roi_score_correlation < 0.5:
+        insights.append("ROI et Score peu corrélés - Revoir les critères d'évaluation")
+
+    # Insight 4: Comparaison meilleurs vs pires
+    if len(profitable) > 0 and len(unprofitable) > 0:
+        avg_profitable_winrate = np.mean([it['win_rate'] for it in profitable])
+        avg_unprofitable_winrate = np.mean([it['win_rate'] for it in unprofitable])
+
+        if avg_profitable_winrate > avg_unprofitable_winrate + 10:
+            insights.append(f"Les itérations profitables ont {avg_profitable_winrate:.0f}% win rate vs {avg_unprofitable_winrate:.0f}% pour les pertes")
+
+    # Insight 5: Recommandation finale
+    if avg_roi > 20 and roi_std < 10:
+        insights.append("🎯 Stratégie optimale: ROI élevé et stable - Prêt pour trading réel")
+    elif avg_roi > 0 and success_rate >= 60:
+        insights.append("⚙️ Stratégie prometteuse - Continuer l'optimisation pour réduire la variabilité")
+    else:
+        insights.append("🔧 Stratégie à revoir - Paramètres inadaptés aux conditions de marché variables")
+
+    return {
+        'batch_id': batch_id,
+        'total_iterations': len(iterations),
+        'avg_roi': avg_roi,
+        'roi_std': roi_std,
+        'best_roi': best_roi,
+        'worst_roi': worst_roi,
+        'profitable_count': len(profitable),
+        'unprofitable_count': len(unprofitable),
+        'success_rate': success_rate,
+        'insights': insights,
+        'roi_score_correlation': roi_score_correlation
+    }
+
+
 def run_simulation(config):
     """Exécute la simulation avec la configuration donnée"""
     try:
@@ -296,13 +381,15 @@ def run_simulation(config):
             # Sauvegarder dans l'historique
             iteration_results = {
                 'iteration': iteration,
+                'batch_id': batch_id,  # Identifier pour analyse intra-batch
                 'roi': critique.analysis_report['roi_analysis']['roi'],
                 'score': critique.analysis_report['overall_score'],
                 'win_rate': critique.analysis_report['trade_analysis']['win_rate'],
                 'num_trades': critique.analysis_report['trade_analysis']['num_trades'],
                 'parameters': strategy_params,
                 'final_value': metrics['final_value'],
-                'profit_loss': metrics['profit_loss']
+                'profit_loss': metrics['profit_loss'],
+                'variation_seed': iteration  # Pour retrouver les conditions de marché
             }
 
             history.add_iteration(iteration_results)
@@ -332,6 +419,28 @@ def run_simulation(config):
         simulation_state['running'] = False
         simulation_state['progress'] = 100
         simulation_state['logs'].append("Simulation completed!")
+
+        # Analyser le batch pour comprendre les variations de performance
+        batch_analysis = None
+        if len(all_iterations) > 1:
+            batch_analysis = analyze_batch_performance(all_iterations, batch_id)
+            simulation_state['last_batch_analysis'] = batch_analysis
+
+            # Afficher l'analyse du batch dans les logs
+            simulation_state['logs'].append("")
+            simulation_state['logs'].append("=" * 60)
+            simulation_state['logs'].append(f"📊 ANALYSE DU BATCH {batch_id}")
+            simulation_state['logs'].append("=" * 60)
+            simulation_state['logs'].append(f"Total iterations: {batch_analysis['total_iterations']}")
+            simulation_state['logs'].append(f"ROI moyen: {batch_analysis['avg_roi']:+.2f}%")
+            simulation_state['logs'].append(f"Écart-type ROI: {batch_analysis['roi_std']:.2f}%")
+            simulation_state['logs'].append(f"Meilleur ROI: {batch_analysis['best_roi']:+.2f}%")
+            simulation_state['logs'].append(f"Pire ROI: {batch_analysis['worst_roi']:+.2f}%")
+            simulation_state['logs'].append(f"")
+            simulation_state['logs'].append("💡 INSIGHTS:")
+            for insight in batch_analysis['insights']:
+                simulation_state['logs'].append(f"  • {insight}")
+            simulation_state['logs'].append("=" * 60)
 
         # Obtenir le classement des influenceurs Twitter (utiliser le dernier backtester)
         twitter_rankings = []
