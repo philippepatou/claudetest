@@ -550,6 +550,9 @@ async function loadAutocritique() {
         // Afficher l'impact des influenceurs
         displayInfluencerImpact(data.influencer_impact_analysis);
 
+        // Afficher les paramètres suggérés (NOUVEAU)
+        displaySuggestedParameters(data.suggested_parameters);
+
         console.log('✓ All autocritique sections displayed');
 
     } catch (error) {
@@ -695,4 +698,93 @@ function displayInfluencerImpact(analysis) {
     } else {
         recommendationsList.innerHTML = '<li>Aucune recommandation spécifique</li>';
     }
+}
+
+// Variable globale pour stocker les paramètres suggérés
+let currentSuggestedParameters = null;
+
+// Afficher les paramètres suggérés par l'autocritique
+function displaySuggestedParameters(params) {
+    console.log('📊 Displaying suggested parameters:', params);
+
+    if (!params) {
+        console.warn('⚠️ No suggested parameters available');
+        document.getElementById('suggested-params-section').style.display = 'none';
+        return;
+    }
+
+    // Stocker les paramètres pour l'application ultérieure
+    currentSuggestedParameters = params;
+
+    const grid = document.getElementById('suggested-params-grid');
+
+    // Définir les noms lisibles des paramètres
+    const paramLabels = {
+        'rsi_period': 'RSI Period',
+        'rsi_oversold': 'RSI Oversold',
+        'rsi_overbought': 'RSI Overbought',
+        'ema_short': 'EMA Court',
+        'ema_long': 'EMA Long',
+        'risk_per_trade': 'Risque par Trade',
+        'max_allocation_per_coin': 'Allocation Max',
+        'stop_loss': 'Stop Loss',
+        'take_profit': 'Take Profit',
+        'twitter_weight': 'Poids Twitter',
+        'macd_signal': 'MACD Signal',
+        'bb_period': 'BB Period',
+        'bb_std': 'BB Std Dev',
+        'momentum_period': 'Momentum Period',
+        'min_history': 'Historique Min'
+    };
+
+    // Créer les éléments de paramètres
+    const paramItems = Object.entries(params).map(([key, value]) => {
+        const label = paramLabels[key] || key;
+        let displayValue = value;
+
+        // Formater les valeurs en pourcentage si nécessaire
+        if (['risk_per_trade', 'max_allocation_per_coin', 'stop_loss', 'take_profit', 'twitter_weight'].includes(key)) {
+            displayValue = (value * 100).toFixed(0) + '%';
+        } else if (Number.isInteger(value)) {
+            displayValue = value;
+        } else {
+            displayValue = value.toFixed(2);
+        }
+
+        return `
+            <div class="param-item">
+                <div class="param-name">${label}</div>
+                <div class="param-value">${displayValue}</div>
+            </div>
+        `;
+    }).join('');
+
+    grid.innerHTML = paramItems;
+    document.getElementById('suggested-params-section').style.display = 'block';
+    console.log('✓ Suggested parameters displayed');
+}
+
+// Appliquer les paramètres suggérés aux champs du formulaire
+function applySuggestedParameters() {
+    if (!currentSuggestedParameters) {
+        alert('Aucun paramètre suggéré disponible');
+        return;
+    }
+
+    console.log('✨ Applying suggested parameters:', currentSuggestedParameters);
+
+    // Appliquer les paramètres en utilisant la fonction updateAllParameters existante
+    updateAllParameters(currentSuggestedParameters);
+
+    // Effet visuel de confirmation
+    const section = document.getElementById('suggested-params-section');
+    section.style.animation = 'fadeIn 0.5s';
+    setTimeout(() => {
+        section.style.animation = '';
+    }, 500);
+
+    // Scroll vers la section de configuration
+    document.querySelector('.config-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    alert('✅ Paramètres suggérés appliqués avec succès !\n\nVous pouvez maintenant lancer une nouvelle simulation avec ces paramètres optimisés.');
 }

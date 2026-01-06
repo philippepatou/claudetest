@@ -243,6 +243,9 @@ def run_simulation(config):
             # Obtenir les métriques
             metrics = backtester.agent.get_performance_summary(final_prices)
 
+            # Obtenir les paramètres suggérés par l'autocritique
+            suggested_params = critique.suggest_improvements()
+
             # Sauvegarder le rapport d'autocritique complet pour l'API
             try:
                 simulation_state['last_autocritique'] = {
@@ -256,7 +259,8 @@ def run_simulation(config):
                     'market_anticipation_analysis': critique.analysis_report.get('market_anticipation_analysis', {}),
                     'influencer_impact_analysis': critique.analysis_report.get('influencer_impact_analysis', {}),
                     'historical_comparison': critique.analysis_report.get('historical_comparison', {}),
-                    'overall_score': critique.analysis_report.get('overall_score', 0)
+                    'overall_score': critique.analysis_report.get('overall_score', 0),
+                    'suggested_parameters': suggested_params  # NOUVEAU
                 }
                 print(f"✓ Autocritique saved successfully for iteration {iteration}")
             except Exception as e:
@@ -289,9 +293,8 @@ def run_simulation(config):
                 f"Iteration {iteration} completed: ROI {iteration_results['roi']:+.2f}%"
             )
 
-            # Obtenir les paramètres suggérés pour la prochaine itération
+            # Utiliser les paramètres suggérés pour la prochaine itération
             if iteration < iterations:
-                suggested_params = critique.suggest_improvements()
                 strategy_params = suggested_params
 
                 # Convertir les paramètres qui doivent être des entiers
