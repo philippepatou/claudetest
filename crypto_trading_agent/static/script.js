@@ -6,6 +6,8 @@ let pollInterval = null;
 let currentAutocritiqueData = null;
 let portfolioChart = null;
 let portfolioDataPoints = [];
+let lastIterationNumber = 0;
+let lastPortfolioHistoryLength = 0;
 
 // Chargement initial
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,6 +31,10 @@ async function startSimulation() {
 
     // Réinitialiser les logs
     document.getElementById('logs').innerHTML = '';
+
+    // Réinitialiser les variables de suivi
+    lastIterationNumber = 0;
+    lastPortfolioHistoryLength = 0;
 
     // Initialiser le graphique du portfolio
     initPortfolioChart();
@@ -200,17 +206,28 @@ function updateProgress(status) {
     document.getElementById('current-day').textContent =
         `${status.current_day} / ${status.total_days}`;
 
-    if (status.results) {
-        const finalValue = status.results.final_value || 0;
-        document.getElementById('portfolio-value').textContent =
-            `${finalValue.toFixed(2)}€`;
-        document.getElementById('current-roi').textContent =
-            `${status.results.roi >= 0 ? '+' : ''}${status.results.roi?.toFixed(2) || '-'}%`;
+    // Détecter le changement d'itération pour réinitialiser le graphique
+    if (status.current_iteration !== lastIterationNumber) {
+        lastIterationNumber = status.current_iteration;
+        lastPortfolioHistoryLength = 0;
+        initPortfolioChart(); // Effacer et réinitialiser le graphique
+    }
 
-        // Mettre à jour le graphique du portfolio
-        if (status.current_day) {
-            updatePortfolioChart(status.current_day, finalValue);
+    // Mettre à jour la valeur du portfolio et le ROI en temps réel
+    const currentValue = status.current_portfolio_value || status.results?.final_value || 0;
+    const currentRoi = status.current_roi !== undefined ? status.current_roi : (status.results?.roi || 0);
+
+    document.getElementById('portfolio-value').textContent = `${currentValue.toFixed(2)}€`;
+    document.getElementById('current-roi').textContent = `${currentRoi >= 0 ? '+' : ''}${currentRoi.toFixed(2)}%`;
+
+    // Mettre à jour le graphique avec l'historique complet du portfolio
+    if (status.portfolio_history && status.portfolio_history.length > 0) {
+        // Ajouter uniquement les nouveaux points depuis la dernière mise à jour
+        for (let i = lastPortfolioHistoryLength; i < status.portfolio_history.length; i++) {
+            const point = status.portfolio_history[i];
+            updatePortfolioChart(point.day, point.value);
         }
+        lastPortfolioHistoryLength = status.portfolio_history.length;
     }
 }
 

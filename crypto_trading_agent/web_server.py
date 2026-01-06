@@ -180,6 +180,11 @@ def run_simulation(config):
             simulation_state['current_iteration'] = iteration
             simulation_state['logs'].append(f"Starting iteration {iteration}/{iterations}")
 
+            # Réinitialiser l'historique du portfolio pour cette itération
+            simulation_state['portfolio_history'] = []
+            simulation_state['current_portfolio_value'] = initial_balance
+            simulation_state['current_roi'] = 0
+
             # Créer le backtester avec variation_seed = numéro d'itération
             # Cela génère des données différentes pour chaque itération
             backtester = Backtester(
@@ -228,6 +233,24 @@ def run_simulation(config):
                     backtester.agent.make_daily_decisions(
                         current_date, historical_data, current_prices
                     )
+
+                    # Calculer la valeur actuelle du portfolio
+                    current_portfolio_value = backtester.agent.balance
+                    for position in backtester.agent.positions:
+                        if position['symbol'] in current_prices:
+                            current_portfolio_value += position['quantity'] * current_prices[position['symbol']]
+
+                    # Calculer le ROI actuel
+                    current_roi = ((current_portfolio_value - initial_balance) / initial_balance) * 100
+
+                    # Mettre à jour l'état en temps réel
+                    simulation_state['current_portfolio_value'] = current_portfolio_value
+                    simulation_state['current_roi'] = current_roi
+                    simulation_state['portfolio_history'].append({
+                        'day': day_num,
+                        'value': current_portfolio_value,
+                        'roi': current_roi
+                    })
 
                 current_date += timedelta(days=1)
 
