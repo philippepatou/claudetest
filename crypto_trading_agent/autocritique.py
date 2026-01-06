@@ -59,12 +59,28 @@ class AutoCritique:
         # 5. Analyse des indicateurs
         indicator_analysis = self._analyze_indicator_effectiveness()
 
+        # 6. Analyse détaillée des transactions (NOUVEAU)
+        transaction_analysis = self._analyze_transactions_detailed()
+
+        # 7. Analyse de l'anticipation du marché (NOUVEAU)
+        market_anticipation_analysis = self._analyze_market_anticipation()
+
+        # 8. Analyse de l'impact des influenceurs (NOUVEAU)
+        influencer_impact_analysis = self._analyze_influencer_impact()
+
+        # 9. Analyse historique comparative (NOUVEAU)
+        historical_comparison = self._analyze_historical_comparison()
+
         self.analysis_report = {
             'roi_analysis': roi_analysis,
             'trade_analysis': trade_analysis,
             'error_analysis': error_analysis,
             'allocation_analysis': allocation_analysis,
             'indicator_analysis': indicator_analysis,
+            'transaction_analysis': transaction_analysis,
+            'market_anticipation_analysis': market_anticipation_analysis,
+            'influencer_impact_analysis': influencer_impact_analysis,
+            'historical_comparison': historical_comparison,
             'overall_score': self._calculate_overall_score(metrics)
         }
 
@@ -266,6 +282,299 @@ class AutoCritique:
             score -= 10  # Trop de frais
 
         return max(0, min(100, score))
+
+    def _analyze_transactions_detailed(self) -> Dict:
+        """
+        Analyse détaillée de chaque transaction
+
+        Returns:
+            Dict avec l'analyse des transactions
+        """
+        transactions = []
+
+        for decision in self.agent.decisions_log:
+            for action in decision['actions']:
+                if action['action'] in ['BUY', 'SELL']:
+                    transaction = {
+                        'date': decision['date'].isoformat() if hasattr(decision['date'], 'isoformat') else str(decision['date']),
+                        'action': action['action'],
+                        'symbol': action['symbol'],
+                        'price': action.get('price', 0),
+                        'reasons': action.get('reasons', []),
+                        'score': action.get('score', 0),
+                        'pnl_pct': action.get('pnl_pct', None)
+                    }
+                    transactions.append(transaction)
+
+        # Analyser le timing des transactions
+        timing_analysis = {
+            'early_exits': 0,  # Ventes trop tôt (auraient pu gagner plus)
+            'late_exits': 0,   # Ventes trop tard (pertes auraient pu être évitées)
+            'good_exits': 0,   # Ventes au bon moment
+            'good_entries': 0, # Achats au bon moment
+            'bad_entries': 0   # Achats au mauvais moment
+        }
+
+        # Analyser chaque paire achat-vente
+        buy_trades = [t for t in transactions if t['action'] == 'BUY']
+        sell_trades = [t for t in transactions if t['action'] == 'SELL']
+
+        for sell in sell_trades:
+            pnl = sell.get('pnl_pct', 0)
+            if pnl > 15:
+                timing_analysis['good_exits'] += 1
+            elif pnl < -5:
+                timing_analysis['late_exits'] += 1
+            elif 0 < pnl < 10:
+                timing_analysis['early_exits'] += 1
+            else:
+                timing_analysis['good_exits'] += 1
+
+        for buy in buy_trades:
+            # Trouver la vente correspondante
+            matching_sells = [s for s in sell_trades
+                            if s['symbol'] == buy['symbol'] and s['date'] > buy['date']]
+            if matching_sells:
+                sell = matching_sells[0]
+                if sell.get('pnl_pct', 0) > 0:
+                    timing_analysis['good_entries'] += 1
+                else:
+                    timing_analysis['bad_entries'] += 1
+
+        return {
+            'total_transactions': len(transactions),
+            'buy_count': len(buy_trades),
+            'sell_count': len(sell_trades),
+            'transactions': transactions,
+            'timing_analysis': timing_analysis,
+            'recommendations': self._generate_timing_recommendations(timing_analysis)
+        }
+
+    def _generate_timing_recommendations(self, timing: Dict) -> List[str]:
+        """Génère des recommandations basées sur l'analyse du timing"""
+        recommendations = []
+
+        total_exits = timing['early_exits'] + timing['late_exits'] + timing['good_exits']
+        if total_exits > 0:
+            early_pct = (timing['early_exits'] / total_exits) * 100
+            late_pct = (timing['late_exits'] / total_exits) * 100
+
+            if early_pct > 40:
+                recommendations.append(
+                    f"Vous sortez trop tôt dans {early_pct:.0f}% des cas. "
+                    "Augmentez le take_profit pour laisser courir les gains."
+                )
+            if late_pct > 40:
+                recommendations.append(
+                    f"Vous sortez trop tard dans {late_pct:.0f}% des cas. "
+                    "Réduisez le stop_loss pour couper les pertes plus rapidement."
+                )
+
+        total_entries = timing['good_entries'] + timing['bad_entries']
+        if total_entries > 0:
+            bad_entry_pct = (timing['bad_entries'] / total_entries) * 100
+            if bad_entry_pct > 50:
+                recommendations.append(
+                    f"{bad_entry_pct:.0f}% des entrées mènent à des pertes. "
+                    "Revoyez les critères d'achat (seuils RSI, confirmations EMA)."
+                )
+
+        return recommendations
+
+    def _analyze_market_anticipation(self) -> Dict:
+        """
+        Analyse comment l'AI a anticipé les changements de marché
+
+        Returns:
+            Dict avec l'analyse de l'anticipation
+        """
+        anticipation_scores = {
+            'early_detection': 0,    # Détecté avant le mouvement
+            'on_time_detection': 0,  # Détecté pendant le mouvement
+            'late_detection': 0,     # Détecté après le mouvement
+            'missed_signals': 0      # Raté complètement
+        }
+
+        analysis_details = []
+
+        # Analyser chaque crypto pour voir si l'AI a bien anticipé
+        for symbol, df in self.all_data.items():
+            if len(df) < 10:
+                continue
+
+            # Chercher les grands mouvements de prix (>10%)
+            df['price_change'] = df['price'].pct_change(periods=5) * 100
+            big_moves = df[abs(df['price_change']) > 10]
+
+            for idx, move in big_moves.iterrows():
+                move_date = move['timestamp']
+                price_change = move['price_change']
+
+                # Vérifier si on a tradé autour de cette date
+                trades_around = [
+                    d for d in self.agent.decisions_log
+                    if abs((d['date'] - move_date).days) <= 3
+                ]
+
+                bought_before = any(
+                    a['action'] == 'BUY' and a['symbol'] == symbol
+                    for d in trades_around if d['date'] < move_date
+                    for a in d['actions']
+                )
+
+                if price_change > 0 and bought_before:
+                    anticipation_scores['early_detection'] += 1
+                    analysis_details.append({
+                        'symbol': symbol,
+                        'date': move_date.isoformat() if hasattr(move_date, 'isoformat') else str(move_date),
+                        'move_pct': price_change,
+                        'anticipation': 'early',
+                        'description': f"Détecté la hausse de {symbol} (+{price_change:.1f}%) AVANT qu'elle se produise ✅"
+                    })
+                elif price_change > 10:
+                    anticipation_scores['missed_signals'] += 1
+                    analysis_details.append({
+                        'symbol': symbol,
+                        'date': move_date.isoformat() if hasattr(move_date, 'isoformat') else str(move_date),
+                        'move_pct': price_change,
+                        'anticipation': 'missed',
+                        'description': f"Manqué l'opportunité {symbol} (+{price_change:.1f}%) ❌"
+                    })
+
+        # Calculer le score d'anticipation
+        total_signals = sum(anticipation_scores.values())
+        anticipation_quality = 'excellent' if total_signals == 0 else \
+            'good' if anticipation_scores['early_detection'] > anticipation_scores['missed_signals'] else \
+            'poor'
+
+        return {
+            'anticipation_scores': anticipation_scores,
+            'anticipation_quality': anticipation_quality,
+            'details': analysis_details[:10],  # Top 10
+            'total_market_moves': total_signals,
+            'early_detection_rate': (anticipation_scores['early_detection'] / total_signals * 100) if total_signals > 0 else 0
+        }
+
+    def _analyze_influencer_impact(self) -> Dict:
+        """
+        Analyse l'impact de chaque influenceur Twitter sur la stratégie
+
+        Returns:
+            Dict avec l'analyse d'impact des influenceurs
+        """
+        rankings = self.agent.get_influencer_rankings()
+
+        # Identifier les influenceurs bénéfiques et nuisibles
+        beneficial = [r for r in rankings if r['win_rate'] > 55 and r['avg_pnl'] > 0]
+        neutral = [r for r in rankings if 45 <= r['win_rate'] <= 55]
+        harmful = [r for r in rankings if r['win_rate'] < 45 or r['avg_pnl'] < -5]
+
+        recommendations = []
+
+        if harmful:
+            harmful_names = [h['influencer'] for h in harmful[:3]]
+            recommendations.append(
+                f"⚠️ Ignorer ou réduire le poids de : {', '.join(harmful_names)} "
+                f"(taux de réussite < 45%)"
+            )
+
+        if beneficial:
+            beneficial_names = [b['influencer'] for b in beneficial[:3]]
+            recommendations.append(
+                f"✅ Augmenter le poids de : {', '.join(beneficial_names)} "
+                f"(performances excellentes)"
+            )
+
+        if not rankings:
+            recommendations.append("Aucune donnée d'influenceur disponible")
+
+        return {
+            'total_influencers_tracked': len(rankings),
+            'beneficial_count': len(beneficial),
+            'neutral_count': len(neutral),
+            'harmful_count': len(harmful),
+            'beneficial_influencers': beneficial[:5],
+            'harmful_influencers': harmful[:5],
+            'recommendations': recommendations,
+            'suggested_weights': self.agent.get_suggested_twitter_weights()
+        }
+
+    def _analyze_historical_comparison(self) -> Dict:
+        """
+        Compare l'itération actuelle avec TOUT l'historique
+
+        Returns:
+            Dict avec la comparaison historique
+        """
+        if not self.history or len(self.history.iterations) == 0:
+            return {
+                'has_history': False,
+                'comparison': 'Première itération - pas de comparaison possible'
+            }
+
+        current_roi = self.analysis_report.get('roi_analysis', {}).get('roi', 0)
+
+        all_rois = [it.get('roi', 0) for it in self.history.iterations]
+        avg_historical_roi = np.mean(all_rois)
+        best_historical_roi = max(all_rois)
+        worst_historical_roi = min(all_rois)
+
+        # Calculer le percentile
+        better_than_count = sum(1 for roi in all_rois if current_roi > roi)
+        percentile = (better_than_count / len(all_rois)) * 100 if all_rois else 0
+
+        # Tendance d'amélioration
+        recent_rois = all_rois[-5:] if len(all_rois) >= 5 else all_rois
+        trend = 'improving' if len(recent_rois) > 1 and recent_rois[-1] > recent_rois[0] else \
+                'declining' if len(recent_rois) > 1 and recent_rois[-1] < recent_rois[0] else \
+                'stable'
+
+        # Insights sur les paramètres
+        param_insights = self.history.get_parameter_insights()
+        top_correlations = sorted(
+            [(name, data.get('correlation', 0)) for name, data in param_insights.items()],
+            key=lambda x: abs(x[1]),
+            reverse=True
+        )[:5]
+
+        return {
+            'has_history': True,
+            'total_iterations': len(self.history.iterations),
+            'current_roi': current_roi,
+            'avg_historical_roi': avg_historical_roi,
+            'best_historical_roi': best_historical_roi,
+            'worst_historical_roi': worst_historical_roi,
+            'percentile': percentile,
+            'trend': trend,
+            'performance_vs_average': current_roi - avg_historical_roi,
+            'performance_vs_best': current_roi - best_historical_roi,
+            'top_parameter_correlations': top_correlations,
+            'comparison_text': self._generate_comparison_text(
+                current_roi, avg_historical_roi, best_historical_roi, percentile, trend
+            )
+        }
+
+    def _generate_comparison_text(self, current: float, avg: float, best: float,
+                                  percentile: float, trend: str) -> str:
+        """Génère un texte de comparaison"""
+        texts = []
+
+        if current > avg:
+            texts.append(f"✅ ROI actuel ({current:+.1f}%) SUPÉRIEUR à la moyenne historique ({avg:+.1f}%)")
+        else:
+            texts.append(f"⚠️ ROI actuel ({current:+.1f}%) INFÉRIEUR à la moyenne historique ({avg:+.1f}%)")
+
+        texts.append(f"📊 Meilleur que {percentile:.0f}% des itérations précédentes")
+
+        if current >= best * 0.9:
+            texts.append("🏆 Performance proche du meilleur historique!")
+        elif current < best * 0.5:
+            texts.append(f"💡 Potentiel d'amélioration important (meilleur: {best:+.1f}%)")
+
+        trend_emoji = "📈" if trend == "improving" else "📉" if trend == "declining" else "➡️"
+        texts.append(f"{trend_emoji} Tendance: {trend}")
+
+        return " | ".join(texts)
 
     def _print_analysis(self):
         """Affiche l'analyse détaillée"""

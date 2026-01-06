@@ -223,6 +223,108 @@
             </div>
         </section>
 
+        <!-- NOUVEAU: Autocritique Section -->
+        <section class="card autocritique-section" id="autocritique-section" style="display: none;">
+            <h2>🧠 Module d'Autocritique IA</h2>
+            <p class="section-description">Analyse approfondie des décisions, anticipations et impacts</p>
+
+            <!-- Historical Comparison -->
+            <div id="historical-comparison" class="comparison-text"></div>
+
+            <!-- Analysis Grid -->
+            <div class="analysis-grid">
+                <!-- Transaction Analysis Card -->
+                <div class="analysis-card">
+                    <h4>📊 Analyse des Transactions</h4>
+                    <div id="transaction-analysis-content">
+                        <div class="analysis-metric">
+                            <span class="metric-label">Total Transactions</span>
+                            <span class="metric-value" id="ac-total-transactions">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Sorties Prématurées</span>
+                            <span class="metric-value negative" id="ac-early-exits">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Sorties Tardives</span>
+                            <span class="metric-value negative" id="ac-late-exits">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Bonnes Sorties</span>
+                            <span class="metric-value positive" id="ac-good-exits">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Entrées Rentables</span>
+                            <span class="metric-value positive" id="ac-good-entries">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Entrées Perdantes</span>
+                            <span class="metric-value negative" id="ac-bad-entries">-</span>
+                        </div>
+                    </div>
+                    <ul class="recommendations-list" id="timing-recommendations">
+                        <!-- Recommendations will be inserted here -->
+                    </ul>
+                </div>
+
+                <!-- Market Anticipation Card -->
+                <div class="analysis-card">
+                    <h4>🔮 Anticipation du Marché</h4>
+                    <div id="market-anticipation-content">
+                        <div class="analysis-metric">
+                            <span class="metric-label">Détections Précoces</span>
+                            <span class="metric-value positive" id="ac-early-detection">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Signaux Manqués</span>
+                            <span class="metric-value negative" id="ac-missed-signals">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Taux de Détection</span>
+                            <span class="metric-value" id="ac-detection-rate">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Qualité</span>
+                            <span class="metric-value" id="ac-anticipation-quality">-</span>
+                        </div>
+                    </div>
+                    <div id="anticipation-details" style="margin-top: 1rem; max-height: 200px; overflow-y: auto;">
+                        <!-- Anticipation details will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Influencer Impact Card -->
+                <div class="analysis-card">
+                    <h4>🐦 Impact des Influenceurs</h4>
+                    <div id="influencer-impact-content">
+                        <div class="analysis-metric">
+                            <span class="metric-label">Influenceurs Bénéfiques</span>
+                            <span class="metric-value positive" id="ac-beneficial-count">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Influenceurs Neutres</span>
+                            <span class="metric-value" id="ac-neutral-count">-</span>
+                        </div>
+                        <div class="analysis-metric">
+                            <span class="metric-label">Influenceurs Nuisibles</span>
+                            <span class="metric-value negative" id="ac-harmful-count">-</span>
+                        </div>
+                    </div>
+                    <ul class="recommendations-list" id="influencer-recommendations">
+                        <!-- Influencer recommendations will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Detailed Transactions -->
+            <div style="margin-top: 2rem;">
+                <h3>📝 Transactions Détaillées (Top 10)</h3>
+                <div id="detailed-transactions" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
+                    <!-- Transaction items will be inserted here -->
+                </div>
+            </div>
+        </section>
+
         <!-- Best Parameters Section -->
         <section class="card" id="best-params-section" style="display: none;">
             <h2>🏆 Meilleurs Paramètres</h2>

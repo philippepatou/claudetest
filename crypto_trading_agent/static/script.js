@@ -162,6 +162,9 @@ async function updateStatus() {
                 displayTwitterRankings(status.twitter_rankings, status.suggested_twitter_weights);
             }
 
+            // Charger et afficher l'autocritique (NOUVEAU)
+            loadAutocritique();
+
             // Recharger l'historique
             loadHistory();
         }
@@ -509,5 +512,180 @@ function displayTwitterRankings(rankings, suggestedWeights) {
                 <span class="weight-value">${weight.toFixed(2)}</span>
             </div>
         `).join('');
+    }
+}
+
+// ====== NOUVEAU: Module d'Autocritique ======
+
+// Charger et afficher l'autocritique
+async function loadAutocritique() {
+    try {
+        const response = await fetch(`${API_URL}/autocritique/latest`);
+
+        if (!response.ok) {
+            // Pas d'autocritique disponible
+            document.getElementById('autocritique-section').style.display = 'none';
+            return;
+        }
+
+        const data = await response.json();
+
+        // Afficher la section
+        document.getElementById('autocritique-section').style.display = 'block';
+
+        // Afficher la comparaison historique
+        displayHistoricalComparison(data.historical_comparison);
+
+        // Afficher l'analyse des transactions
+        displayTransactionAnalysis(data.transaction_analysis);
+
+        // Afficher l'anticipation du marché
+        displayMarketAnticipation(data.market_anticipation_analysis);
+
+        // Afficher l'impact des influenceurs
+        displayInfluencerImpact(data.influencer_impact_analysis);
+
+    } catch (error) {
+        console.error('Error loading autocritique:', error);
+        document.getElementById('autocritique-section').style.display = 'none';
+    }
+}
+
+// Afficher la comparaison historique
+function displayHistoricalComparison(comparison) {
+    const container = document.getElementById('historical-comparison');
+
+    if (!comparison || !comparison.has_history) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+    container.innerHTML = `
+        <strong>📊 Comparaison Historique (${comparison.total_iterations} itérations)</strong><br>
+        ${comparison.comparison_text}
+    `;
+}
+
+// Afficher l'analyse des transactions
+function displayTransactionAnalysis(analysis) {
+    if (!analysis) return;
+
+    const timing = analysis.timing_analysis || {};
+
+    document.getElementById('ac-total-transactions').textContent = analysis.total_transactions || 0;
+    document.getElementById('ac-early-exits').textContent = timing.early_exits || 0;
+    document.getElementById('ac-late-exits').textContent = timing.late_exits || 0;
+    document.getElementById('ac-good-exits').textContent = timing.good_exits || 0;
+    document.getElementById('ac-good-entries').textContent = timing.good_entries || 0;
+    document.getElementById('ac-bad-entries').textContent = timing.bad_entries || 0;
+
+    // Afficher les recommandations
+    const recommendationsList = document.getElementById('timing-recommendations');
+    if (analysis.recommendations && analysis.recommendations.length > 0) {
+        recommendationsList.innerHTML = analysis.recommendations.map(rec =>
+            `<li>${rec}</li>`
+        ).join('');
+    } else {
+        recommendationsList.innerHTML = '<li>✅ Timing des transactions optimal</li>';
+    }
+
+    // Afficher les transactions détaillées
+    displayDetailedTransactions(analysis.transactions || []);
+}
+
+// Afficher les transactions détaillées
+function displayDetailedTransactions(transactions) {
+    const container = document.getElementById('detailed-transactions');
+
+    if (!transactions || transactions.length === 0) {
+        container.innerHTML = '<p class="no-data">Aucune transaction disponible</p>';
+        return;
+    }
+
+    // Prendre les 10 premières transactions
+    const topTransactions = transactions.slice(0, 10);
+
+    container.innerHTML = topTransactions.map(tx => {
+        const badgeClass = tx.action === 'BUY' ? 'success' :
+                          tx.pnl_pct && tx.pnl_pct > 0 ? 'success' : 'danger';
+        const pnlText = tx.pnl_pct ? `${tx.pnl_pct > 0 ? '+' : ''}${tx.pnl_pct.toFixed(2)}%` : '';
+
+        return `
+            <div class="transaction-item ${tx.action.toLowerCase()}">
+                <div class="transaction-header">
+                    <div>
+                        <span class="badge ${badgeClass}">${tx.action}</span>
+                        <strong>${tx.symbol}</strong>
+                        ${pnlText ? `<span class="metric-value ${tx.pnl_pct > 0 ? 'positive' : 'negative'}">${pnlText}</span>` : ''}
+                    </div>
+                    <span class="transaction-details">${tx.price ? tx.price.toFixed(2) + '€' : ''}</span>
+                </div>
+                <div class="transaction-details">
+                    ${tx.date} • Score: ${tx.score || 0}
+                </div>
+                ${tx.reasons && tx.reasons.length > 0 ? `
+                    <div class="transaction-details" style="margin-top: 0.5rem;">
+                        Raisons: ${tx.reasons.join(', ')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+// Afficher l'anticipation du marché
+function displayMarketAnticipation(analysis) {
+    if (!analysis) return;
+
+    const scores = analysis.anticipation_scores || {};
+
+    document.getElementById('ac-early-detection').textContent = scores.early_detection || 0;
+    document.getElementById('ac-missed-signals').textContent = scores.missed_signals || 0;
+    document.getElementById('ac-detection-rate').textContent =
+        (analysis.early_detection_rate || 0).toFixed(1) + '%';
+
+    const quality = analysis.anticipation_quality || 'N/A';
+    const qualityElement = document.getElementById('ac-anticipation-quality');
+    qualityElement.textContent = quality.toUpperCase();
+    qualityElement.className = 'metric-value';
+    if (quality === 'excellent' || quality === 'good') {
+        qualityElement.classList.add('positive');
+    } else if (quality === 'poor') {
+        qualityElement.classList.add('negative');
+    }
+
+    // Afficher les détails d'anticipation
+    const detailsContainer = document.getElementById('anticipation-details');
+    if (analysis.details && analysis.details.length > 0) {
+        detailsContainer.innerHTML = analysis.details.map(detail => `
+            <div style="padding: 0.5rem; margin-bottom: 0.5rem; background: rgba(51, 65, 85, 0.3); border-radius: 4px; font-size: 0.875rem;">
+                <span class="badge ${detail.anticipation === 'early' ? 'success' : 'danger'}">
+                    ${detail.anticipation === 'early' ? '✓' : '✗'}
+                </span>
+                ${detail.description}
+            </div>
+        `).join('');
+    } else {
+        detailsContainer.innerHTML = '<p style="font-size: 0.875rem; color: var(--text-muted);">Aucun mouvement majeur détecté</p>';
+    }
+}
+
+// Afficher l'impact des influenceurs
+function displayInfluencerImpact(analysis) {
+    if (!analysis) return;
+
+    document.getElementById('ac-beneficial-count').textContent = analysis.beneficial_count || 0;
+    document.getElementById('ac-neutral-count').textContent = analysis.neutral_count || 0;
+    document.getElementById('ac-harmful-count').textContent = analysis.harmful_count || 0;
+
+    // Afficher les recommandations
+    const recommendationsList = document.getElementById('influencer-recommendations');
+    if (analysis.recommendations && analysis.recommendations.length > 0) {
+        recommendationsList.innerHTML = analysis.recommendations.map(rec =>
+            `<li>${rec}</li>`
+        ).join('');
+    } else {
+        recommendationsList.innerHTML = '<li>Aucune recommandation spécifique</li>';
     }
 }

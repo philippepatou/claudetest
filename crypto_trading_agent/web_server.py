@@ -141,6 +141,15 @@ def get_best_parameters():
     })
 
 
+@app.route('/api/autocritique/latest', methods=['GET'])
+def get_latest_autocritique():
+    """Récupère le dernier rapport d'autocritique détaillé"""
+    if 'last_autocritique' not in simulation_state:
+        return jsonify({'error': 'No autocritique available'}), 404
+
+    return jsonify(simulation_state['last_autocritique'])
+
+
 def run_simulation(config):
     """Exécute la simulation avec la configuration donnée"""
     try:
@@ -231,6 +240,21 @@ def run_simulation(config):
 
             # Obtenir les métriques
             metrics = backtester.agent.get_performance_summary(final_prices)
+
+            # Sauvegarder le rapport d'autocritique complet pour l'API
+            simulation_state['last_autocritique'] = {
+                'iteration': iteration,
+                'roi_analysis': critique.analysis_report['roi_analysis'],
+                'trade_analysis': critique.analysis_report['trade_analysis'],
+                'error_analysis': critique.analysis_report['error_analysis'],
+                'allocation_analysis': critique.analysis_report['allocation_analysis'],
+                'indicator_analysis': critique.analysis_report['indicator_analysis'],
+                'transaction_analysis': critique.analysis_report.get('transaction_analysis', {}),
+                'market_anticipation_analysis': critique.analysis_report.get('market_anticipation_analysis', {}),
+                'influencer_impact_analysis': critique.analysis_report.get('influencer_impact_analysis', {}),
+                'historical_comparison': critique.analysis_report.get('historical_comparison', {}),
+                'overall_score': critique.analysis_report['overall_score']
+            }
 
             # Sauvegarder dans l'historique
             iteration_results = {
