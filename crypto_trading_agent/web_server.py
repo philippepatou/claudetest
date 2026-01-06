@@ -153,6 +153,130 @@ def get_latest_autocritique():
     return jsonify(simulation_state['last_autocritique'])
 
 
+@app.route('/api/risk/metrics', methods=['GET'])
+def get_risk_metrics():
+    """Récupère les métriques de risque en temps réel"""
+    if not simulation_state.get('running') and not simulation_state.get('results'):
+        return jsonify({'error': 'No active simulation'}), 404
+
+    # Get current agent and portfolio if available
+    agent = simulation_state.get('agent')
+    portfolio_history = simulation_state.get('portfolio_history', [])
+
+    if not agent or not portfolio_history:
+        return jsonify({'error': 'Risk data not available'}), 404
+
+    # Calculate risk metrics
+    try:
+        # Current portfolio value
+        current_value = simulation_state.get('current_portfolio_value', 0)
+        initial_balance = agent.portfolio.initial_balance
+
+        # Drawdown calculation
+        peak_value = simulation_state.get('peak_portfolio_value', initial_balance)
+        if current_value > peak_value:
+            peak_value = current_value
+            simulation_state['peak_portfolio_value'] = peak_value
+
+        drawdown = ((current_value - peak_value) / peak_value) * 100
+
+        # Circuit breaker status
+        circuit_breaker_triggered = getattr(agent, 'circuit_breaker_triggered', False)
+        circuit_breaker_threshold = getattr(agent, 'circuit_breaker_threshold', -0.20) * 100
+        daily_loss_limit = getattr(agent, 'daily_loss_limit', -0.05) * 100
+
+        # Calculate Value at Risk (VaR 95%) from portfolio history
+        var_95 = 0
+        sharpe_ratio = 0
+        max_drawdown = 0
+
+        if len(portfolio_history) > 1:
+            values = [h['value'] for h in portfolio_history]
+            returns = []
+            for i in range(1, len(values)):
+                ret = (values[i] - values[i-1]) / values[i-1]
+                returns.append(ret)
+
+            if returns:
+                returns_array = np.array(returns)
+                var_95 = np.percentile(returns_array, 5) * 100  # 5th percentile
+
+                # Sharpe ratio (assuming risk-free rate = 0)
+                avg_return = np.mean(returns_array)
+                std_return = np.std(returns_array)
+                if std_return > 0:
+                    # Annualized Sharpe ratio
+                    sharpe_ratio = (avg_return / std_return) * np.sqrt(365)
+
+                # Max drawdown
+                peak = values[0]
+                for value in values:
+                    if value > peak:
+                        peak = value
+                    dd = ((value - peak) / peak) * 100
+                    if dd < max_drawdown:
+                        max_drawdown = dd
+
+        # Position-level risk breakdown
+        position_risks = []
+        current_prices = simulation_state.get('current_prices', {})
+
+        if current_prices and hasattr(agent, 'positions'):
+            for symbol, position_info in agent.positions.items():
+                entry_price = position_info.get('entry_price', 0)
+                current_price = current_prices.get(symbol, entry_price)
+
+                if entry_price > 0:
+                    position_pnl = ((current_price - entry_price) / entry_price) * 100
+                    position_value = agent.portfolio.get_holding_value(symbol, current_price)
+                    position_pct = (position_value / current_value) * 100 if current_value > 0 else 0
+
+                    # Get high watermark for trailing stop
+                    high_watermark = simulation_state.get('position_high_watermarks', {}).get(symbol, current_price)
+                    trailing_drawdown = ((current_price - high_watermark) / high_watermark) * 100
+
+                    position_risks.append({
+                        'symbol': symbol,
+                        'pnl': round(position_pnl, 2),
+                        'value': round(position_value, 2),
+                        'allocation': round(position_pct, 2),
+                        'high_watermark': round(high_watermark, 2),
+                        'trailing_drawdown': round(trailing_drawdown, 2)
+                    })
+
+        # Risk level indicator (low, medium, high, critical)
+        risk_level = 'low'
+        if drawdown <= -15:
+            risk_level = 'critical'
+        elif drawdown <= -10:
+            risk_level = 'high'
+        elif drawdown <= -5:
+            risk_level = 'medium'
+
+        return jsonify({
+            'current_value': round(current_value, 2),
+            'initial_balance': round(initial_balance, 2),
+            'peak_value': round(peak_value, 2),
+            'drawdown': round(drawdown, 2),
+            'max_drawdown': round(max_drawdown, 2),
+            'var_95': round(var_95, 2),
+            'sharpe_ratio': round(sharpe_ratio, 2),
+            'circuit_breaker': {
+                'triggered': circuit_breaker_triggered,
+                'threshold': round(circuit_breaker_threshold, 1),
+                'daily_limit': round(daily_loss_limit, 1),
+                'distance_to_trigger': round(drawdown - circuit_breaker_threshold, 2)
+            },
+            'risk_level': risk_level,
+            'position_risks': position_risks,
+            'total_positions': len(position_risks)
+        })
+
+    except Exception as e:
+        print(f"Error calculating risk metrics: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
 def analyze_batch_performance(iterations: list, batch_id: str) -> dict:
     """
     Analyse les variations de performance entre itérations du même batch
@@ -292,6 +416,10 @@ def run_simulation(config):
             # Charger les données
             backtester.load_data()
 
+            # Store agent reference in simulation_state for risk metrics
+            simulation_state['agent'] = backtester.agent
+            simulation_state['peak_portfolio_value'] = initial_balance
+
             # Calculer le nombre total de jours
             total_days = (end_date - start_date).days + 1
             simulation_state['total_days'] = total_days
@@ -334,6 +462,8 @@ def run_simulation(config):
                     # Mettre à jour l'état en temps réel
                     simulation_state['current_portfolio_value'] = current_portfolio_value
                     simulation_state['current_roi'] = current_roi
+                    simulation_state['current_prices'] = current_prices
+                    simulation_state['position_high_watermarks'] = getattr(backtester.agent, 'position_high_watermarks', {})
                     simulation_state['portfolio_history'].append({
                         'day': day_num,
                         'value': current_portfolio_value,

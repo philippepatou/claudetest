@@ -28,6 +28,7 @@ async function startSimulation() {
 
     // Afficher la section de progression
     document.getElementById('progress-section').style.display = 'block';
+    document.getElementById('risk-dashboard-section').style.display = 'block';
     document.getElementById('results-section').style.display = 'none';
 
     // Réinitialiser les logs
@@ -157,6 +158,11 @@ async function updateStatus() {
 
         // Mettre à jour les logs
         updateLogs(status.logs);
+
+        // Mettre à jour le tableau de bord des risques
+        if (status.running || status.results) {
+            updateRiskDashboard();
+        }
 
         // Si la simulation est terminée
         if (!status.running && status.progress === 100) {
@@ -1208,4 +1214,149 @@ function adjustInfluencerWeights() {
     }, 500);
 
     alert(message);
+}
+
+// ========================================
+// RISK DASHBOARD FUNCTIONS
+// ========================================
+
+/**
+ * Update risk dashboard with real-time metrics
+ */
+async function updateRiskDashboard() {
+    try {
+        const response = await fetch(`${API_URL}/risk/metrics`);
+
+        if (!response.ok) {
+            // Risk data not available yet
+            return;
+        }
+
+        const risk = await response.json();
+
+        // Update risk level banner
+        updateRiskLevel(risk.risk_level);
+
+        // Update drawdown metrics
+        document.getElementById('risk-drawdown').textContent = `${risk.drawdown.toFixed(2)}%`;
+        document.getElementById('risk-max-drawdown').textContent = `${risk.max_drawdown.toFixed(2)}%`;
+
+        // Color code the drawdown
+        const drawdownEl = document.getElementById('risk-drawdown');
+        drawdownEl.className = 'risk-metric-value';
+        if (risk.drawdown <= -15) {
+            drawdownEl.style.color = '#dc2626'; // red
+        } else if (risk.drawdown <= -10) {
+            drawdownEl.style.color = '#ea580c'; // orange
+        } else if (risk.drawdown <= -5) {
+            drawdownEl.style.color = '#facc15'; // yellow
+        } else {
+            drawdownEl.style.color = '#22c55e'; // green
+        }
+
+        // Update circuit breaker status
+        const cbStatus = risk.circuit_breaker.triggered ? '🚨 DÉCLENCHÉ' : '✓ ACTIF';
+        const cbColor = risk.circuit_breaker.triggered ? '#dc2626' : '#22c55e';
+
+        document.getElementById('risk-circuit-breaker').textContent = cbStatus;
+        document.getElementById('risk-circuit-breaker').style.color = cbColor;
+        document.getElementById('risk-cb-distance').textContent =
+            `${risk.circuit_breaker.distance_to_trigger.toFixed(1)}%`;
+
+        // Update VaR
+        document.getElementById('risk-var').textContent = `${risk.var_95.toFixed(2)}%`;
+
+        // Update Sharpe ratio
+        const sharpeEl = document.getElementById('risk-sharpe');
+        sharpeEl.textContent = risk.sharpe_ratio.toFixed(2);
+
+        // Color code Sharpe ratio (> 1 is good, > 2 is excellent)
+        if (risk.sharpe_ratio > 2) {
+            sharpeEl.style.color = '#22c55e'; // green
+        } else if (risk.sharpe_ratio > 1) {
+            sharpeEl.style.color = '#84cc16'; // lime
+        } else if (risk.sharpe_ratio > 0) {
+            sharpeEl.style.color = '#facc15'; // yellow
+        } else {
+            sharpeEl.style.color = '#dc2626'; // red
+        }
+
+        // Update position risks table
+        updatePositionRisksTable(risk.position_risks);
+
+    } catch (error) {
+        console.error('Error updating risk dashboard:', error);
+    }
+}
+
+/**
+ * Update risk level banner
+ */
+function updateRiskLevel(level) {
+    const banner = document.getElementById('risk-level-banner');
+    const valueEl = document.getElementById('risk-level-value');
+
+    // Remove all risk level classes
+    banner.className = 'risk-level-banner';
+
+    // Add appropriate class and text
+    switch (level) {
+        case 'low':
+            banner.classList.add('risk-low');
+            valueEl.textContent = 'BAS';
+            break;
+        case 'medium':
+            banner.classList.add('risk-medium');
+            valueEl.textContent = 'MOYEN';
+            break;
+        case 'high':
+            banner.classList.add('risk-high');
+            valueEl.textContent = 'ÉLEVÉ';
+            break;
+        case 'critical':
+            banner.classList.add('risk-critical');
+            valueEl.textContent = 'CRITIQUE';
+            break;
+    }
+}
+
+/**
+ * Update position risks table
+ */
+function updatePositionRisksTable(positions) {
+    const tableEl = document.getElementById('position-risks-table');
+
+    if (!positions || positions.length === 0) {
+        tableEl.innerHTML = '<div class="position-risks-empty">Aucune position active</div>';
+        return;
+    }
+
+    // Build table
+    let html = '<table class="position-risks-table">';
+    html += '<thead><tr>';
+    html += '<th>Asset</th>';
+    html += '<th>P&L</th>';
+    html += '<th>Valeur</th>';
+    html += '<th>Allocation</th>';
+    html += '<th>High Watermark</th>';
+    html += '<th>Trailing DD</th>';
+    html += '</tr></thead>';
+    html += '<tbody>';
+
+    positions.forEach(pos => {
+        const pnlClass = pos.pnl >= 0 ? 'positive' : 'negative';
+        const trailingClass = pos.trailing_drawdown <= -5 ? 'negative' : '';
+
+        html += '<tr>';
+        html += `<td><strong>${pos.symbol}</strong></td>`;
+        html += `<td class="${pnlClass}">${pos.pnl >= 0 ? '+' : ''}${pos.pnl.toFixed(2)}%</td>`;
+        html += `<td>${pos.value.toFixed(2)}€</td>`;
+        html += `<td>${pos.allocation.toFixed(1)}%</td>`;
+        html += `<td>${pos.high_watermark.toFixed(2)}€</td>`;
+        html += `<td class="${trailingClass}">${pos.trailing_drawdown.toFixed(2)}%</td>`;
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    tableEl.innerHTML = html;
 }

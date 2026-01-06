@@ -196,6 +196,68 @@
             </div>
         </section>
 
+        <!-- Risk Dashboard Section -->
+        <section class="card" id="risk-dashboard-section" style="display: none;">
+            <h2>⚠️ Tableau de Bord des Risques</h2>
+            <p class="section-description">Surveillance en temps réel des métriques de risque</p>
+
+            <!-- Risk Level Indicator -->
+            <div class="risk-level-banner" id="risk-level-banner">
+                <div class="risk-level-icon">⚡</div>
+                <div class="risk-level-info">
+                    <div class="risk-level-label">Niveau de Risque</div>
+                    <div class="risk-level-value" id="risk-level-value">LOW</div>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="risk-metrics-grid">
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">📊</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Drawdown Actuel</div>
+                        <div class="risk-metric-value" id="risk-drawdown">0.0%</div>
+                        <div class="risk-metric-subtext">Max: <span id="risk-max-drawdown">0.0%</span></div>
+                    </div>
+                </div>
+
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">🚨</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Circuit Breaker</div>
+                        <div class="risk-metric-value" id="risk-circuit-breaker">ACTIF</div>
+                        <div class="risk-metric-subtext">Distance: <span id="risk-cb-distance">-</span></div>
+                    </div>
+                </div>
+
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">📉</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Value at Risk (95%)</div>
+                        <div class="risk-metric-value" id="risk-var">0.0%</div>
+                        <div class="risk-metric-subtext">Perte journalière max probable</div>
+                    </div>
+                </div>
+
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">📈</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Sharpe Ratio</div>
+                        <div class="risk-metric-value" id="risk-sharpe">0.00</div>
+                        <div class="risk-metric-subtext">Ratio rendement/risque</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Position Risks Table -->
+            <div class="position-risks-container">
+                <h3>📋 Risques par Position</h3>
+                <div id="position-risks-table">
+                    <div class="position-risks-empty">Aucune position active</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Results Section -->
         <section class="card" id="results-section" style="display: none;">
             <h2>🏆 Résultats de la Simulation</h2>
