@@ -31,6 +31,14 @@ class TradingAgent:
         self.twitter_trade_tracking = []  # Liste des trades avec leurs signaux Twitter
         self.influencer_stats = {}  # Stats de performance par influenceur
 
+        # Protection et gestion du risque
+        self.peak_portfolio_value = portfolio.initial_balance  # Plus haut historique
+        self.circuit_breaker_triggered = False
+        self.circuit_breaker_threshold = -0.20  # -20% max drawdown
+        self.daily_loss_limit = -0.05  # -5% max par jour
+        self.daily_start_value = portfolio.initial_balance
+        self.position_high_watermarks = {}  # {symbol: highest_price} pour trailing stop
+
     def make_daily_decisions(self, current_date: datetime, all_data: Dict[str, pd.DataFrame],
                             current_prices: Dict[str, float]):
         """
@@ -48,7 +56,59 @@ class TradingAgent:
             'cash': self.portfolio.cash
         }
 
-        # 0. Générer les signaux Twitter pour la journée
+        # 0. CIRCUIT BREAKER - Protection contre perte excessive
+        total_value = self.portfolio.get_total_value(current_prices)
+
+        # Mettre à jour le peak value
+        if total_value > self.peak_portfolio_value:
+            self.peak_portfolio_value = total_value
+
+        # Calculer le drawdown
+        drawdown = ((total_value - self.peak_portfolio_value) / self.peak_portfolio_value)
+
+        # Calculer la perte journalière
+        daily_change = ((total_value - self.daily_start_value) / self.daily_start_value)
+
+        # Vérifier le circuit breaker (drawdown global)
+        if drawdown <= self.circuit_breaker_threshold and not self.circuit_breaker_triggered:
+            self.circuit_breaker_triggered = True
+            print(f"\n{'='*60}")
+            print("🚨 CIRCUIT BREAKER ACTIVÉ 🚨")
+            print(f"{'='*60}")
+            print(f"Drawdown: {drawdown*100:.1f}%")
+            print(f"Valeur actuelle: {total_value:.2f}€")
+            print(f"Peak: {self.peak_portfolio_value:.2f}€")
+            print(f"Perte depuis peak: {(total_value - self.peak_portfolio_value):.2f}€")
+            print("Trading suspendu pour protéger le capital restant.")
+            print(f"{'='*60}\n")
+
+            # Sortie d'urgence de toutes les positions
+            self._emergency_exit(current_prices, current_date, decision)
+
+            decision['circuit_breaker'] = True
+            self.decisions_log.append(decision)
+            return decision
+
+        # Vérifier la limite de perte journalière
+        if daily_change <= self.daily_loss_limit:
+            print(f"\n⚠️ LIMITE DE PERTE JOURNALIÈRE ATTEINTE: {daily_change*100:.1f}%")
+            print(f"Pas de nouveaux trades aujourd'hui. Positions existantes maintenues.\n")
+
+            decision['daily_limit_reached'] = True
+            # Ne pas prendre de nouvelles positions, mais gérer les existantes
+        else:
+            decision['daily_limit_reached'] = False
+
+        # Réinitialiser la valeur de début de journée pour le lendemain
+        self.daily_start_value = total_value
+
+        # Si circuit breaker actif, bloquer tout trading
+        if self.circuit_breaker_triggered:
+            decision['circuit_breaker'] = True
+            self.decisions_log.append(decision)
+            return decision
+
+        # 1. Générer les signaux Twitter pour la journée
         twitter_signals = []
         if self.strategy.use_twitter_signals:
             twitter_signals = self.twitter_generator.generate_signals_for_date(
@@ -89,9 +149,32 @@ class TradingAgent:
             current_price = current_prices[symbol]
             entry_price = self.entry_prices.get(symbol, current_price)
 
-            # Vérifier s'il faut vendre
+            # Mettre à jour le high watermark pour le trailing stop
+            if symbol not in self.position_high_watermarks:
+                self.position_high_watermarks[symbol] = current_price
+            else:
+                self.position_high_watermarks[symbol] = max(
+                    self.position_high_watermarks[symbol],
+                    current_price
+                )
+
+            high_watermark = self.position_high_watermarks[symbol]
+
+            # Calculer la volatilité de cet asset
+            if symbol in all_data:
+                historical_df = all_data[symbol][all_data[symbol]['timestamp'] <= current_date]
+                if len(historical_df) > 20:
+                    volatility = self.strategy.calculate_volatility(historical_df['price'])
+                else:
+                    volatility = 0.10  # Défaut
+            else:
+                volatility = 0.10
+
+            # Vérifier s'il faut vendre (avec stop adaptatif et trailing stop)
             should_sell, reason = self.strategy.should_sell(
-                symbol, entry_price, current_price, analyses[symbol]
+                symbol, entry_price, current_price, analyses[symbol],
+                high_watermark=high_watermark,
+                volatility=volatility
             )
 
             if should_sell:
@@ -140,6 +223,8 @@ class TradingAgent:
                     })
                     if symbol in self.entry_prices:
                         del self.entry_prices[symbol]
+                    if symbol in self.position_high_watermarks:
+                        del self.position_high_watermarks[symbol]
 
         # 3. Identifier les opportunités d'achat
         ranked_opportunities = self.strategy.rank_opportunities(analyses)
@@ -415,3 +500,40 @@ class TradingAgent:
                 suggested_weights[rank['influencer']] = 0.5  # Poids minimal pour mauvaise performance
 
         return suggested_weights
+
+    def _emergency_exit(self, current_prices: Dict[str, float], current_date: datetime,
+                       decision: Dict):
+        """
+        Sortie d'urgence de toutes les positions (circuit breaker)
+
+        Args:
+            current_prices: Prix actuels
+            current_date: Date actuelle
+            decision: Dict de décision à mettre à jour
+        """
+        print("🚨 Liquidation d'urgence de toutes les positions...")
+
+        for symbol in list(self.portfolio.holdings.keys()):
+            if symbol in current_prices:
+                current_price = current_prices[symbol]
+                entry_price = self.entry_prices.get(symbol, current_price)
+
+                success = self.portfolio.sell_all(symbol, current_price, current_date)
+                if success:
+                    pnl = ((current_price - entry_price) / entry_price) * 100
+
+                    decision['actions'].append({
+                        'action': 'EMERGENCY_SELL',
+                        'symbol': symbol,
+                        'reason': 'Circuit breaker triggered',
+                        'price': current_price,
+                        'pnl_pct': pnl
+                    })
+
+                    if symbol in self.entry_prices:
+                        del self.entry_prices[symbol]
+
+                    print(f"  ✓ {symbol} liquidé à {current_price:.2f}€ (P&L: {pnl:+.1f}%)")
+
+        print(f"💰 Cash restant: {self.portfolio.cash:.2f}€")
+        print("Trading arrêté définitivement pour cette session.\n")

@@ -32,9 +32,17 @@ class TradingStrategy:
             'min_history': 30,  # Minimum de jours d'historique nécessaires
             'risk_per_trade': 0.15,  # Maximum 15% du capital par trade
             'max_allocation_per_coin': 0.25,  # Maximum 25% dans une seule crypto
-            'stop_loss': 0.10,  # Stop loss à -10%
+            'stop_loss': 0.10,  # Stop loss de base à -10%
             'take_profit': 0.20,  # Take profit à +20%
             'twitter_weight': 0.30,  # Poids des signaux Twitter (30% de l'influence totale)
+
+            # Paramètres avancés de gestion du risque
+            'use_adaptive_stop': True,  # Utiliser stop-loss adaptatif
+            'use_trailing_stop': True,  # Utiliser trailing stop
+            'trailing_stop_activation': 0.15,  # Activer trailing après +15% profit
+            'trailing_stop_distance': 0.10,  # Distance de 10% du plus haut
+            'min_stop_loss': 0.08,  # Stop-loss minimum 8%
+            'max_stop_loss': 0.25,  # Stop-loss maximum 25%
         }
 
         # Mettre à jour avec les paramètres fournis
@@ -294,34 +302,100 @@ class TradingStrategy:
 
         return opportunities
 
-    def should_sell(self, symbol: str, entry_price: float, current_price: float,
-                    analysis: Dict) -> Tuple[bool, str]:
+    def calculate_volatility(self, prices: pd.Series, period: int = 20) -> float:
         """
-        Détermine s'il faut vendre une position
+        Calcule la volatilité (écart-type des rendements)
+
+        Args:
+            prices: Série de prix
+            period: Période de calcul
+
+        Returns:
+            Volatilité (0-1)
+        """
+        if len(prices) < period:
+            return 0.10  # Volatilité par défaut
+
+        returns = prices.pct_change().tail(period)
+        volatility = returns.std()
+
+        return max(0.05, min(0.30, volatility))  # Entre 5% et 30%
+
+    def calculate_adaptive_stop_loss(self, base_stop: float, volatility: float) -> float:
+        """
+        Calcule un stop-loss adapté à la volatilité
+
+        Args:
+            base_stop: Stop-loss de base (ex: 0.10 pour 10%)
+            volatility: Volatilité de l'asset
+
+        Returns:
+            Stop-loss ajusté
+        """
+        if not self.params.get('use_adaptive_stop', True):
+            return base_stop
+
+        # Ajuster le stop-loss selon la volatilité
+        # Si volatilité élevée, élargir le stop
+        volatility_multiplier = 1.0 + (volatility / 0.10)  # Base 10%
+
+        adaptive_stop = base_stop * volatility_multiplier
+
+        # Limiter entre min et max
+        min_stop = self.params.get('min_stop_loss', 0.08)
+        max_stop = self.params.get('max_stop_loss', 0.25)
+
+        return max(min_stop, min(max_stop, adaptive_stop))
+
+    def should_sell(self, symbol: str, entry_price: float, current_price: float,
+                    analysis: Dict, high_watermark: float = None,
+                    volatility: float = 0.10) -> Tuple[bool, str]:
+        """
+        Détermine s'il faut vendre une position avec stop-loss adaptatif et trailing stop
 
         Args:
             symbol: Symbole de la crypto
             entry_price: Prix d'entrée
             current_price: Prix actuel
             analysis: Résultat de l'analyse
+            high_watermark: Plus haut prix atteint depuis l'achat (pour trailing stop)
+            volatility: Volatilité de l'asset (pour stop adaptatif)
 
         Returns:
             Tuple (should_sell, reason)
         """
         # Calculer le profit/perte
-        pnl_pct = ((current_price - entry_price) / entry_price) * 100
+        pnl_pct = ((current_price - entry_price) / entry_price)
 
-        # Stop loss
-        if pnl_pct <= -self.params['stop_loss'] * 100:
-            return True, f"Stop loss triggered ({pnl_pct:.1f}%)"
+        # 1. TRAILING STOP (si en profit significatif)
+        if (self.params.get('use_trailing_stop', True) and
+            high_watermark is not None and
+            pnl_pct > self.params['trailing_stop_activation']):
 
-        # Take profit
-        if pnl_pct >= self.params['take_profit'] * 100:
-            return True, f"Take profit reached ({pnl_pct:.1f}%)"
+            # Calculer la baisse depuis le plus haut
+            drawdown_from_high = ((current_price - high_watermark) / high_watermark)
 
-        # Signal de vente fort
+            # Si le prix a chuté de X% depuis le plus haut, vendre
+            trailing_distance = self.params['trailing_stop_distance']
+            if drawdown_from_high <= -trailing_distance:
+                return True, f"Trailing stop: {drawdown_from_high*100:.1f}% from peak ({high_watermark:.2f}€)"
+
+        # 2. STOP LOSS ADAPTATIF
+        adaptive_stop = self.calculate_adaptive_stop_loss(
+            self.params['stop_loss'],
+            volatility
+        )
+
+        if pnl_pct <= -adaptive_stop:
+            return True, f"Adaptive stop loss triggered ({pnl_pct*100:.1f}%, threshold: {adaptive_stop*100:.1f}%)"
+
+        # 3. TAKE PROFIT (simple)
+        if pnl_pct >= self.params['take_profit']:
+            return True, f"Take profit reached ({pnl_pct*100:.1f}%)"
+
+        # 4. SIGNAL DE VENTE FORT
         if analysis['signal'] == 'SELL' and analysis['score'] < -50:
-            return True, f"Strong sell signal (score: {analysis['score']})"
+            return True, f"Strong sell signal (score: {analysis['score']:.1f})"
 
         return False, ""
 
