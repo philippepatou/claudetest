@@ -113,8 +113,17 @@ class IterationHistory:
         if not values:
             return {}
 
-        # Calculer la corrélation
-        correlation = np.corrcoef(values, rois)[0, 1] if len(values) > 1 else 0
+        # Calculer la corrélation (gérer le cas où il n'y a pas de variance)
+        if len(values) > 1:
+            try:
+                correlation = np.corrcoef(values, rois)[0, 1]
+                # Remplacer NaN par 0 (cas où stddev = 0)
+                if np.isnan(correlation):
+                    correlation = 0
+            except:
+                correlation = 0
+        else:
+            correlation = 0
 
         return {
             'param_name': param_name,

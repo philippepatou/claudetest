@@ -68,9 +68,7 @@ class AutoCritique:
         # 8. Analyse de l'impact des influenceurs (NOUVEAU)
         influencer_impact_analysis = self._analyze_influencer_impact()
 
-        # 9. Analyse historique comparative (NOUVEAU)
-        historical_comparison = self._analyze_historical_comparison()
-
+        # Construire le rapport d'abord (sans historical_comparison)
         self.analysis_report = {
             'roi_analysis': roi_analysis,
             'trade_analysis': trade_analysis,
@@ -80,9 +78,12 @@ class AutoCritique:
             'transaction_analysis': transaction_analysis,
             'market_anticipation_analysis': market_anticipation_analysis,
             'influencer_impact_analysis': influencer_impact_analysis,
-            'historical_comparison': historical_comparison,
             'overall_score': self._calculate_overall_score(metrics)
         }
+
+        # 9. Analyse historique comparative (NOUVEAU) - maintenant que analysis_report existe
+        historical_comparison = self._analyze_historical_comparison()
+        self.analysis_report['historical_comparison'] = historical_comparison
 
         self._print_analysis()
 

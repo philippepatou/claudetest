@@ -519,19 +519,24 @@ function displayTwitterRankings(rankings, suggestedWeights) {
 
 // Charger et afficher l'autocritique
 async function loadAutocritique() {
+    console.log('📊 Loading autocritique...');
     try {
         const response = await fetch(`${API_URL}/autocritique/latest`);
+        console.log('📊 Autocritique response status:', response.status);
 
         if (!response.ok) {
             // Pas d'autocritique disponible
+            console.warn('⚠️ No autocritique available (status:', response.status + ')');
             document.getElementById('autocritique-section').style.display = 'none';
             return;
         }
 
         const data = await response.json();
+        console.log('✓ Autocritique data loaded:', data);
 
         // Afficher la section
         document.getElementById('autocritique-section').style.display = 'block';
+        console.log('✓ Autocritique section displayed');
 
         // Afficher la comparaison historique
         displayHistoricalComparison(data.historical_comparison);
@@ -545,8 +550,10 @@ async function loadAutocritique() {
         // Afficher l'impact des influenceurs
         displayInfluencerImpact(data.influencer_impact_analysis);
 
+        console.log('✓ All autocritique sections displayed');
+
     } catch (error) {
-        console.error('Error loading autocritique:', error);
+        console.error('❌ Error loading autocritique:', error);
         document.getElementById('autocritique-section').style.display = 'none';
     }
 }
