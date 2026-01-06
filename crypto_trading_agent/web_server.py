@@ -10,6 +10,7 @@ from datetime import datetime
 from backtester import Backtester
 from autocritique import AutoCritique
 from iteration_history import IterationHistory
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')  # Backend non-GUI
 import matplotlib.pyplot as plt
