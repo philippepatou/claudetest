@@ -235,10 +235,7 @@ def run_simulation(config):
                     )
 
                     # Calculer la valeur actuelle du portfolio
-                    current_portfolio_value = backtester.agent.balance
-                    for position in backtester.agent.positions:
-                        if position['symbol'] in current_prices:
-                            current_portfolio_value += position['quantity'] * current_prices[position['symbol']]
+                    current_portfolio_value = backtester.agent.portfolio.get_total_value(current_prices)
 
                     # Calculer le ROI actuel
                     current_roi = ((current_portfolio_value - initial_balance) / initial_balance) * 100
