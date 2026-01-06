@@ -165,8 +165,13 @@ def run_simulation(config):
         iterations = sim_params.get('iterations', 1)
         use_twitter = sim_params.get('use_twitter', True)
 
+        # Générer un identifiant unique pour ce batch de simulations
+        import uuid
+        batch_id = str(uuid.uuid4())[:8]  # Identifiant court pour ce batch
+        simulation_state['current_batch_id'] = batch_id
+
         simulation_state['total_iterations'] = iterations
-        simulation_state['logs'].append(f"Starting simulation with {iterations} iterations")
+        simulation_state['logs'].append(f"Starting simulation batch {batch_id} with {iterations} iterations")
 
         # Suivre la meilleure itération
         best_iteration = None
