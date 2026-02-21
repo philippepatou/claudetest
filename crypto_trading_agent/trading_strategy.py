@@ -1,0 +1,431 @@
+"""
+Module de stratégie de trading hybride
+Combine indicateurs techniques, analyse de momentum et signaux Twitter
+"""
+import pandas as pd
+import numpy as np
+from typing import Dict, List, Tuple, Optional
+
+
+class TradingStrategy:
+    """Stratégie de trading hybride avec indicateurs techniques et signaux Twitter"""
+
+    def __init__(self, parameters: Dict = None, use_twitter_signals: bool = True):
+        """
+        Initialise la stratégie avec des paramètres configurables
+
+        Args:
+            parameters: Dict de paramètres de la stratégie
+            use_twitter_signals: Utiliser les signaux Twitter (True par défaut)
+        """
+        # Paramètres par défaut
+        self.params = {
+            'rsi_period': 14,
+            'rsi_oversold': 30,
+            'rsi_overbought': 70,
+            'ema_short': 12,
+            'ema_long': 26,
+            'macd_signal': 9,
+            'bb_period': 20,
+            'bb_std': 2,
+            'momentum_period': 10,
+            'min_history': 30,  # Minimum de jours d'historique nécessaires
+            'risk_per_trade': 0.15,  # Maximum 15% du capital par trade
+            'max_allocation_per_coin': 0.25,  # Maximum 25% dans une seule crypto
+            'stop_loss': 0.10,  # Stop loss de base à -10%
+            'take_profit': 0.20,  # Take profit à +20%
+            'twitter_weight': 0.30,  # Poids des signaux Twitter (30% de l'influence totale)
+
+            # Paramètres avancés de gestion du risque
+            'use_adaptive_stop': True,  # Utiliser stop-loss adaptatif
+            'use_trailing_stop': True,  # Utiliser trailing stop
+            'trailing_stop_activation': 0.15,  # Activer trailing après +15% profit
+            'trailing_stop_distance': 0.10,  # Distance de 10% du plus haut
+            'min_stop_loss': 0.08,  # Stop-loss minimum 8%
+            'max_stop_loss': 0.25,  # Stop-loss maximum 25%
+        }
+
+        # Mettre à jour avec les paramètres fournis
+        if parameters:
+            self.params.update(parameters)
+
+        self.use_twitter_signals = use_twitter_signals
+
+    def calculate_rsi(self, prices: pd.Series, period: int = None) -> pd.Series:
+        """
+        Calcule le RSI (Relative Strength Index)
+
+        Args:
+            prices: Série de prix
+            period: Période pour le calcul
+
+        Returns:
+            Série RSI
+        """
+        if period is None:
+            period = self.params['rsi_period']
+
+        delta = prices.diff()
+        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+
+        rs = gain / loss
+        rsi = 100 - (100 / (1 + rs))
+
+        return rsi
+
+    def calculate_macd(self, prices: pd.Series) -> Tuple[pd.Series, pd.Series, pd.Series]:
+        """
+        Calcule le MACD (Moving Average Convergence Divergence)
+
+        Args:
+            prices: Série de prix
+
+        Returns:
+            Tuple (MACD, signal, histogram)
+        """
+        ema_short = prices.ewm(span=self.params['ema_short'], adjust=False).mean()
+        ema_long = prices.ewm(span=self.params['ema_long'], adjust=False).mean()
+
+        macd = ema_short - ema_long
+        signal = macd.ewm(span=self.params['macd_signal'], adjust=False).mean()
+        histogram = macd - signal
+
+        return macd, signal, histogram
+
+    def calculate_bollinger_bands(self, prices: pd.Series) -> Tuple[pd.Series, pd.Series, pd.Series]:
+        """
+        Calcule les Bollinger Bands
+
+        Args:
+            prices: Série de prix
+
+        Returns:
+            Tuple (upper, middle, lower)
+        """
+        period = self.params['bb_period']
+        std_dev = self.params['bb_std']
+
+        middle = prices.rolling(window=period).mean()
+        std = prices.rolling(window=period).std()
+
+        upper = middle + (std * std_dev)
+        lower = middle - (std * std_dev)
+
+        return upper, middle, lower
+
+    def calculate_momentum(self, prices: pd.Series, period: int = None) -> pd.Series:
+        """
+        Calcule le momentum
+
+        Args:
+            prices: Série de prix
+            period: Période pour le calcul
+
+        Returns:
+            Série de momentum
+        """
+        if period is None:
+            period = self.params['momentum_period']
+
+        momentum = prices.pct_change(periods=period) * 100
+        return momentum
+
+    def calculate_ema(self, prices: pd.Series, period: int) -> pd.Series:
+        """
+        Calcule l'EMA (Exponential Moving Average)
+
+        Args:
+            prices: Série de prix
+            period: Période
+
+        Returns:
+            Série EMA
+        """
+        return prices.ewm(span=period, adjust=False).mean()
+
+    def analyze_crypto(self, df: pd.DataFrame, twitter_signal: Optional[Dict] = None) -> Dict:
+        """
+        Analyse une crypto avec tous les indicateurs + signaux Twitter
+
+        Args:
+            df: DataFrame avec colonnes 'timestamp' et 'price'
+            twitter_signal: Signal Twitter agrégé (optionnel)
+
+        Returns:
+            Dict avec les signaux et scores
+        """
+        if len(df) < self.params['min_history']:
+            return {'signal': 'HOLD', 'score': 0, 'reason': 'Insufficient history'}
+
+        prices = df['price'].copy()
+
+        # Calculer tous les indicateurs
+        rsi = self.calculate_rsi(prices)
+        macd, macd_signal, macd_hist = self.calculate_macd(prices)
+        bb_upper, bb_middle, bb_lower = self.calculate_bollinger_bands(prices)
+        momentum = self.calculate_momentum(prices)
+        ema_short = self.calculate_ema(prices, self.params['ema_short'])
+        ema_long = self.calculate_ema(prices, self.params['ema_long'])
+
+        # Valeurs actuelles (dernière ligne)
+        current_price = prices.iloc[-1]
+        current_rsi = rsi.iloc[-1]
+        current_macd = macd.iloc[-1]
+        current_macd_signal = macd_signal.iloc[-1]
+        current_macd_hist = macd_hist.iloc[-1]
+        current_bb_upper = bb_upper.iloc[-1]
+        current_bb_lower = bb_lower.iloc[-1]
+        current_momentum = momentum.iloc[-1]
+        current_ema_short = ema_short.iloc[-1]
+        current_ema_long = ema_long.iloc[-1]
+
+        # Calcul du score technique (de -100 à +100)
+        technical_score = 0
+        reasons = []
+
+        # 1. RSI (poids: 25 points)
+        if current_rsi < self.params['rsi_oversold']:
+            technical_score += 25
+            reasons.append(f"RSI oversold ({current_rsi:.1f})")
+        elif current_rsi > self.params['rsi_overbought']:
+            technical_score -= 25
+            reasons.append(f"RSI overbought ({current_rsi:.1f})")
+        else:
+            # RSI neutre
+            if current_rsi < 50:
+                technical_score += (50 - current_rsi) / 2
+            else:
+                technical_score -= (current_rsi - 50) / 2
+
+        # 2. MACD (poids: 25 points)
+        if current_macd > current_macd_signal and current_macd_hist > 0:
+            technical_score += 25
+            reasons.append("MACD bullish crossover")
+        elif current_macd < current_macd_signal and current_macd_hist < 0:
+            technical_score -= 25
+            reasons.append("MACD bearish crossover")
+
+        # 3. Bollinger Bands (poids: 20 points)
+        if current_price < current_bb_lower:
+            technical_score += 20
+            reasons.append("Price below lower BB")
+        elif current_price > current_bb_upper:
+            technical_score -= 20
+            reasons.append("Price above upper BB")
+
+        # 4. EMA Trend (poids: 15 points)
+        if current_ema_short > current_ema_long:
+            technical_score += 15
+            reasons.append("Bullish EMA trend")
+        else:
+            technical_score -= 15
+            reasons.append("Bearish EMA trend")
+
+        # 5. Momentum (poids: 15 points)
+        if current_momentum > 5:
+            technical_score += 15
+            reasons.append(f"Strong positive momentum ({current_momentum:.1f}%)")
+        elif current_momentum < -5:
+            technical_score -= 15
+            reasons.append(f"Strong negative momentum ({current_momentum:.1f}%)")
+
+        # 6. Intégrer les signaux Twitter si disponibles
+        final_score = technical_score
+        twitter_contribution = 0
+
+        if self.use_twitter_signals and twitter_signal and twitter_signal.get('num_signals', 0) > 0:
+            twitter_weight = self.params['twitter_weight']
+            technical_weight = 1.0 - twitter_weight
+
+            # Convertir le signal Twitter en score (-100 à +100)
+            tw_sig = twitter_signal['signal']
+            tw_conf = twitter_signal['confidence']
+
+            if tw_sig == 'BUY':
+                twitter_contribution = 100 * tw_conf
+            elif tw_sig == 'SELL':
+                twitter_contribution = -100 * tw_conf
+            else:  # HOLD
+                twitter_contribution = 0
+
+            # Combiner les scores avec pondération
+            final_score = (technical_score * technical_weight +
+                          twitter_contribution * twitter_weight)
+
+            # Ajouter à la raison
+            num_signals = twitter_signal.get('num_signals', 0)
+            reasons.append(
+                f"Twitter: {tw_sig} ({tw_conf:.0%} conf, {num_signals} signals)"
+            )
+
+        # Déterminer le signal final
+        if final_score > 40:
+            signal = 'BUY'
+        elif final_score < -40:
+            signal = 'SELL'
+        else:
+            signal = 'HOLD'
+
+        return {
+            'signal': signal,
+            'score': final_score,
+            'technical_score': technical_score,
+            'twitter_contribution': twitter_contribution,
+            'reasons': reasons,
+            'indicators': {
+                'rsi': current_rsi,
+                'macd': current_macd,
+                'macd_signal': current_macd_signal,
+                'macd_histogram': current_macd_hist,
+                'bb_upper': current_bb_upper,
+                'bb_lower': current_bb_lower,
+                'momentum': current_momentum,
+                'ema_short': current_ema_short,
+                'ema_long': current_ema_long
+            },
+            'twitter_signal': twitter_signal if twitter_signal else None
+        }
+
+    def rank_opportunities(self, analyses: Dict[str, Dict]) -> List[Tuple[str, Dict]]:
+        """
+        Classe les opportunités par score
+
+        Args:
+            analyses: Dict {symbol: analysis_result}
+
+        Returns:
+            Liste triée de (symbol, analysis) par score décroissant
+        """
+        opportunities = [(symbol, analysis) for symbol, analysis in analyses.items()]
+        opportunities.sort(key=lambda x: x[1]['score'], reverse=True)
+
+        return opportunities
+
+    def calculate_volatility(self, prices: pd.Series, period: int = 20) -> float:
+        """
+        Calcule la volatilité (écart-type des rendements)
+
+        Args:
+            prices: Série de prix
+            period: Période de calcul
+
+        Returns:
+            Volatilité (0-1)
+        """
+        if len(prices) < period:
+            return 0.10  # Volatilité par défaut
+
+        returns = prices.pct_change().tail(period)
+        volatility = returns.std()
+
+        return max(0.05, min(0.30, volatility))  # Entre 5% et 30%
+
+    def calculate_adaptive_stop_loss(self, base_stop: float, volatility: float) -> float:
+        """
+        Calcule un stop-loss adapté à la volatilité
+
+        Args:
+            base_stop: Stop-loss de base (ex: 0.10 pour 10%)
+            volatility: Volatilité de l'asset
+
+        Returns:
+            Stop-loss ajusté
+        """
+        if not self.params.get('use_adaptive_stop', True):
+            return base_stop
+
+        # Ajuster le stop-loss selon la volatilité
+        # Si volatilité élevée, élargir le stop
+        volatility_multiplier = 1.0 + (volatility / 0.10)  # Base 10%
+
+        adaptive_stop = base_stop * volatility_multiplier
+
+        # Limiter entre min et max
+        min_stop = self.params.get('min_stop_loss', 0.08)
+        max_stop = self.params.get('max_stop_loss', 0.25)
+
+        return max(min_stop, min(max_stop, adaptive_stop))
+
+    def should_sell(self, symbol: str, entry_price: float, current_price: float,
+                    analysis: Dict, high_watermark: float = None,
+                    volatility: float = 0.10) -> Tuple[bool, str]:
+        """
+        Détermine s'il faut vendre une position avec stop-loss adaptatif et trailing stop
+
+        Args:
+            symbol: Symbole de la crypto
+            entry_price: Prix d'entrée
+            current_price: Prix actuel
+            analysis: Résultat de l'analyse
+            high_watermark: Plus haut prix atteint depuis l'achat (pour trailing stop)
+            volatility: Volatilité de l'asset (pour stop adaptatif)
+
+        Returns:
+            Tuple (should_sell, reason)
+        """
+        # Calculer le profit/perte
+        pnl_pct = ((current_price - entry_price) / entry_price)
+
+        # 1. TRAILING STOP (si en profit significatif)
+        if (self.params.get('use_trailing_stop', True) and
+            high_watermark is not None and
+            pnl_pct > self.params['trailing_stop_activation']):
+
+            # Calculer la baisse depuis le plus haut
+            drawdown_from_high = ((current_price - high_watermark) / high_watermark)
+
+            # Si le prix a chuté de X% depuis le plus haut, vendre
+            trailing_distance = self.params['trailing_stop_distance']
+            if drawdown_from_high <= -trailing_distance:
+                return True, f"Trailing stop: {drawdown_from_high*100:.1f}% from peak ({high_watermark:.2f}€)"
+
+        # 2. STOP LOSS ADAPTATIF
+        adaptive_stop = self.calculate_adaptive_stop_loss(
+            self.params['stop_loss'],
+            volatility
+        )
+
+        if pnl_pct <= -adaptive_stop:
+            return True, f"Adaptive stop loss triggered ({pnl_pct*100:.1f}%, threshold: {adaptive_stop*100:.1f}%)"
+
+        # 3. TAKE PROFIT (simple)
+        if pnl_pct >= self.params['take_profit']:
+            return True, f"Take profit reached ({pnl_pct*100:.1f}%)"
+
+        # 4. SIGNAL DE VENTE FORT
+        if analysis['signal'] == 'SELL' and analysis['score'] < -50:
+            return True, f"Strong sell signal (score: {analysis['score']:.1f})"
+
+        return False, ""
+
+    def get_position_size(self, capital: float, current_price: float,
+                         analysis: Dict) -> float:
+        """
+        Calcule la taille de position recommandée
+
+        Args:
+            capital: Capital disponible
+            current_price: Prix actuel
+            analysis: Résultat de l'analyse
+
+        Returns:
+            Montant en EUR à investir
+        """
+        # Base sur le risque par trade
+        max_position = capital * self.params['risk_per_trade']
+
+        # Ajuster selon la force du signal (score de 0 à 100)
+        score_strength = min(abs(analysis['score']) / 100, 1.0)
+        adjusted_position = max_position * score_strength
+
+        return adjusted_position
+
+    def update_parameters(self, new_params: Dict):
+        """
+        Met à jour les paramètres de la stratégie
+
+        Args:
+            new_params: Nouveaux paramètres
+        """
+        self.params.update(new_params)

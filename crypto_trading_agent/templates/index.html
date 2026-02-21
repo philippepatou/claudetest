@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Agent de Trading Crypto - Interface de Contrôle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🤖 Agent de Trading Crypto</h1>
+            <p class="subtitle">Interface de Contrôle et de Visualisation</p>
+        </header>
+
+        <!-- Configuration Panel -->
+        <section class="card">
+            <h2>⚙️ Configuration de la Simulation</h2>
+
+            <div class="config-grid">
+                <div class="config-section">
+                    <h3>Paramètres de Simulation</h3>
+                    <div class="form-group">
+                        <label>Capital Initial (€)</label>
+                        <input type="number" id="initial-balance" value="1000" min="100" step="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre d'Itérations</label>
+                        <input type="number" id="iterations" value="1" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de Début</label>
+                        <input type="date" id="start-date" value="2024-12-24">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de Fin</label>
+                        <input type="date" id="end-date" value="2025-12-24">
+                    </div>
+                    <div class="form-group checkbox">
+                        <label>
+                            <input type="checkbox" id="use-twitter" checked>
+                            Utiliser les Signaux Twitter
+                        </label>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Paramètres de Risque</h3>
+                    <div class="form-group">
+                        <label>Risque par Trade (%)</label>
+                        <input type="number" id="risk-per-trade" value="15" min="1" max="50" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Allocation Max par Coin (%)</label>
+                        <input type="number" id="max-allocation" value="25" min="5" max="50" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss (%)</label>
+                        <input type="number" id="stop-loss" value="10" min="1" max="30" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Take Profit (%)</label>
+                        <input type="number" id="take-profit" value="20" min="5" max="100" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Poids Twitter (%)</label>
+                        <input type="number" id="twitter-weight" value="30" min="0" max="100" step="5">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Indicateurs Techniques</h3>
+                    <div class="form-group">
+                        <label>RSI Period</label>
+                        <input type="number" id="rsi-period" value="14" min="5" max="30" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>RSI Oversold</label>
+                        <input type="number" id="rsi-oversold" value="30" min="10" max="40" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>RSI Overbought</label>
+                        <input type="number" id="rsi-overbought" value="70" min="60" max="90" step="5">
+                    </div>
+                    <div class="form-group">
+                        <label>EMA Court</label>
+                        <input type="number" id="ema-short" value="12" min="5" max="20" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>EMA Long</label>
+                        <input type="number" id="ema-long" value="26" min="15" max="50" step="1">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Autres Indicateurs</h3>
+                    <div class="form-group">
+                        <label>MACD Signal</label>
+                        <input type="number" id="macd-signal" value="9" min="5" max="15" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Bollinger Bands Period</label>
+                        <input type="number" id="bb-period" value="20" min="10" max="30" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Bollinger Bands Std</label>
+                        <input type="number" id="bb-std" value="2" min="1" max="3" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Momentum Period</label>
+                        <input type="number" id="momentum-period" value="10" min="5" max="20" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Historique Minimum</label>
+                        <input type="number" id="min-history" value="30" min="20" max="50" step="5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Parameters Section (initially hidden) -->
+            <div id="best-params-inline" style="display: none; margin-top: 30px;">
+                <h3>🏆 Meilleurs Paramètres Trouvés</h3>
+
+                <div class="best-iteration-compact">
+                    <span><strong>Itération:</strong> <span id="best-iter-num-inline">-</span></span>
+                    <span><strong>ROI:</strong> <span id="best-roi-inline" class="highlight">-</span></span>
+                    <span><strong>Score:</strong> <span id="best-score-inline">-</span></span>
+                </div>
+
+                <div class="params-compact-grid" id="best-params-inline-grid">
+                    <!-- Les paramètres seront insérés ici par JavaScript -->
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="start-btn" class="btn btn-primary" onclick="startSimulation()">
+                    🚀 Démarrer la Simulation
+                </button>
+                <button id="stop-btn" class="btn btn-danger" onclick="stopSimulation()" disabled>
+                    ⏹️ Arrêter
+                </button>
+                <button id="apply-best-params-btn" class="btn btn-success" onclick="applyBestHistoricalParameters()" style="display: none;">
+                    ✨ Appliquer Meilleurs Paramètres
+                </button>
+                <button class="btn btn-secondary" onclick="clearHistory()">
+                    🗑️ Effacer l'Historique
+                </button>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="card" id="progress-section" style="display: none;">
+            <h2>📊 Progression de la Simulation</h2>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progress-text">Préparation...</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Itération</div>
+                    <div class="stat-value" id="current-iteration">0 / 0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Jour</div>
+                    <div class="stat-value" id="current-day">0 / 0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Valeur Portefeuille</div>
+                    <div class="stat-value" id="portfolio-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">ROI Actuel</div>
+                    <div class="stat-value" id="current-roi">-</div>
+                </div>
+            </div>
+
+            <!-- NOUVEAU: Graphique d'évolution du portfolio -->
+            <div style="margin-top: 2rem;">
+                <h3>📈 Évolution du Portfolio</h3>
+                <canvas id="portfolio-chart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <div class="logs-container">
+                <h3>📝 Logs de Simulation</h3>
+                <div class="logs" id="logs"></div>
+            </div>
+        </section>
+
+        <!-- Risk Dashboard Section -->
+        <section class="card" id="risk-dashboard-section" style="display: none;">
+            <h2>⚠️ Tableau de Bord des Risques</h2>
+            <p class="section-description">Surveillance en temps réel des métriques de risque</p>
+
+            <!-- Risk Level Indicator -->
+            <div class="risk-level-banner" id="risk-level-banner">
+                <div class="risk-level-icon">⚡</div>
+                <div class="risk-level-info">
+                    <div class="risk-level-label">Niveau de Risque</div>
+                    <div class="risk-level-value" id="risk-level-value">LOW</div>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="risk-metrics-grid">
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">📊</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Drawdown Actuel</div>
+                        <div class="risk-metric-value" id="risk-drawdown">0.0%</div>
+                        <div class="risk-metric-subtext">Max: <span id="risk-max-drawdown">0.0%</span></div>
+                    </div>
+                </div>
+
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">🚨</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Circuit Breaker</div>
+                        <div class="risk-metric-value" id="risk-circuit-breaker">ACTIF</div>
+                        <div class="risk-metric-subtext">Distance: <span id="risk-cb-distance">-</span></div>
+                    </div>
+                </div>
+
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">📉</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Value at Risk (95%)</div>
+                        <div class="risk-metric-value" id="risk-var">0.0%</div>
+                        <div class="risk-metric-subtext">Perte journalière max probable</div>
+                    </div>
+                </div>
+
+                <div class="risk-metric-card">
+                    <div class="risk-metric-icon">📈</div>
+                    <div class="risk-metric-content">
+                        <div class="risk-metric-label">Sharpe Ratio</div>
+                        <div class="risk-metric-value" id="risk-sharpe">0.00</div>
+                        <div class="risk-metric-subtext">Ratio rendement/risque</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Position Risks Table -->
+            <div class="position-risks-container">
+                <h3>📋 Risques par Position</h3>
+                <div id="position-risks-table">
+                    <div class="position-risks-empty">Aucune position active</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="card" id="results-section" style="display: none;">
+            <h2>🏆 Résultats de la Simulation</h2>
+
+            <div class="results-grid">
+                <div class="result-card success">
+                    <div class="result-label">ROI Final</div>
+                    <div class="result-value" id="final-roi">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Valeur Finale</div>
+                    <div class="result-value" id="final-value">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Profit/Perte</div>
+                    <div class="result-value" id="profit-loss">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Nombre de Trades</div>
+                    <div class="result-value" id="num-trades">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Win Rate</div>
+                    <div class="result-value" id="win-rate">-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Score Global</div>
+                    <div class="result-value" id="score">-</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOUVEAU: Autocritique Section -->
+        <section class="card autocritique-section" id="autocritique-section" style="display: none;">
+            <h2>🧠 Module d'Autocritique IA</h2>
+            <p class="section-description">Analyse approfondie des décisions, anticipations et impacts</p>
+
+            <!-- Historical Comparison -->
+            <div id="historical-comparison" class="comparison-text"></div>
+
+            <!-- Accordion for Analysis Sections -->
+            <div class="accordion">
+                <!-- Transaction Analysis Accordion Item -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span class="accordion-title">📊 Analyse des Transactions</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" style="display: block;">
+                        <div id="transaction-analysis-content">
+                            <div class="analysis-metric">
+                                <span class="metric-label">Total Transactions</span>
+                                <span class="metric-value" id="ac-total-transactions">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Sorties Prématurées</span>
+                                <span class="metric-value negative" id="ac-early-exits">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Sorties Tardives</span>
+                                <span class="metric-value negative" id="ac-late-exits">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Bonnes Sorties</span>
+                                <span class="metric-value positive" id="ac-good-exits">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Entrées Rentables</span>
+                                <span class="metric-value positive" id="ac-good-entries">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Entrées Perdantes</span>
+                                <span class="metric-value negative" id="ac-bad-entries">-</span>
+                            </div>
+                        </div>
+                        <ul class="recommendations-list" id="timing-recommendations">
+                            <!-- Recommendations will be inserted here -->
+                        </ul>
+                        <button class="btn btn-primary btn-sm" onclick="adjustTransactionBehavior()" style="margin-top: 1rem; width: 100%;">
+                            🎯 Ajuster Stop-Loss / Take-Profit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Market Anticipation Accordion Item -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span class="accordion-title">🔮 Anticipation du Marché</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" style="display: none;">
+                        <div id="market-anticipation-content">
+                            <div class="analysis-metric">
+                                <span class="metric-label">Détections Précoces</span>
+                                <span class="metric-value positive" id="ac-early-detection">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Signaux Manqués</span>
+                                <span class="metric-value negative" id="ac-missed-signals">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Taux de Détection</span>
+                                <span class="metric-value" id="ac-detection-rate">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Qualité</span>
+                                <span class="metric-value" id="ac-anticipation-quality">-</span>
+                            </div>
+                        </div>
+                        <div id="anticipation-details" style="margin-top: 1rem; max-height: 200px; overflow-y: auto;">
+                            <!-- Anticipation details will be inserted here -->
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="adjustAnticipationBehavior()" style="margin-top: 1rem; width: 100%;">
+                            🎯 Ajuster Sensibilité Détection
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Influencer Impact Accordion Item -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span class="accordion-title">🐦 Impact des Influenceurs</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" style="display: none;">
+                        <div id="influencer-impact-content">
+                            <div class="analysis-metric">
+                                <span class="metric-label">Influenceurs Bénéfiques</span>
+                                <span class="metric-value positive" id="ac-beneficial-count">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Influenceurs Neutres</span>
+                                <span class="metric-value" id="ac-neutral-count">-</span>
+                            </div>
+                            <div class="analysis-metric">
+                                <span class="metric-label">Influenceurs Nuisibles</span>
+                                <span class="metric-value negative" id="ac-harmful-count">-</span>
+                            </div>
+                        </div>
+                        <ul class="recommendations-list" id="influencer-recommendations">
+                            <!-- Influencer recommendations will be inserted here -->
+                        </ul>
+                        <button class="btn btn-primary btn-sm" onclick="adjustInfluencerWeights()" style="margin-top: 1rem; width: 100%;">
+                            🎯 Ajuster Poids des Influenceurs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Detailed Transactions Accordion Item -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span class="accordion-title">📝 Transactions Détaillées (Top 10)</span>
+                        <span class="accordion-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" style="display: none;">
+                        <div id="detailed-transactions" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Transaction items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOUVEAU: Suggested Parameters Section -->
+            <div style="margin-top: 3rem;" id="suggested-params-section">
+                <div class="best-params-header">
+                    <h3>💡 Paramètres Suggérés par l'Autocritique</h3>
+                    <button class="btn btn-success btn-sm" onclick="applySuggestedParameters()">
+                        ✨ Appliquer Ces Paramètres
+                    </button>
+                </div>
+                <p class="section-description">Basé sur l'analyse complète de l'historique et des performances</p>
+
+                <div class="params-grid" id="suggested-params-grid">
+                    <!-- Les paramètres suggérés seront insérés ici par JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Best Parameters Section -->
+        <section class="card" id="best-params-section" style="display: none;">
+            <h2>🏆 Meilleurs Paramètres</h2>
+
+            <div class="best-iteration-header">
+                <div class="best-stat">
+                    <span class="best-label">Itération:</span>
+                    <span class="best-value" id="best-iteration-num">-</span>
+                </div>
+                <div class="best-stat">
+                    <span class="best-label">ROI:</span>
+                    <span class="best-value highlight" id="best-iteration-roi">-</span>
+                </div>
+                <div class="best-stat">
+                    <span class="best-label">Score:</span>
+                    <span class="best-value" id="best-iteration-score">-</span>
+                </div>
+            </div>
+
+            <div class="params-grid" id="best-params-grid">
+                <!-- Les paramètres seront insérés ici par JavaScript -->
+            </div>
+        </section>
+
+        <!-- Twitter Rankings Section -->
+        <section class="card" id="twitter-rankings-section" style="display: none;">
+            <h2>🐦 Classement des Influenceurs Twitter</h2>
+            <p class="section-description">Basé sur les performances réelles des trades influencés</p>
+
+            <div class="twitter-rankings-grid" id="twitter-rankings-grid">
+                <!-- Le classement sera inséré ici par JavaScript -->
+            </div>
+
+            <div id="suggested-weights-section" style="margin-top: 30px; display: none;">
+                <h3>💡 Poids Suggérés (Optimisés)</h3>
+                <p class="hint-text">Ces poids ont été calculés automatiquement selon la fiabilité de chaque influenceur</p>
+                <div class="weights-grid" id="suggested-weights-grid">
+                    <!-- Les poids suggérés seront insérés ici -->
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="card">
+            <h2>📈 Historique des Itérations</h2>
+
+            <div class="history-summary" id="history-summary">
+                <div class="summary-stat">
+                    <div class="summary-label">Total Itérations</div>
+                    <div class="summary-value" id="total-iterations">0</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">ROI Moyen</div>
+                    <div class="summary-value" id="avg-roi">0%</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Meilleur ROI</div>
+                    <div class="summary-value" id="best-roi">0%</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Pire ROI</div>
+                    <div class="summary-value" id="worst-roi">0%</div>
+                </div>
+            </div>
+
+            <div class="history-table-container">
+                <table class="history-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>ROI</th>
+                            <th>Score</th>
+                            <th>Win Rate</th>
+                            <th>Trades</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td colspan="6" class="no-data">Aucun historique disponible</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🤖 Agent de Trading Crypto v1.0 | Créé avec Claude Code</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
